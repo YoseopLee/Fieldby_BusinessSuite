@@ -39,14 +39,17 @@ const CampaignProgressDetail = ({ uid, fcmToken ,name, height, profile,simpleadd
                     setUserBestImage1(json1.data.media_url);                    
                     setUserMediaType1(json1.data.media_type);
                     setUserBestThumbnail1(json1.data.thumbnail_url);
+                    console.log(json1.data);                    
 
                     setUserBestImage2(json2.data.media_url);
                     setUserMediaType2(json2.data.media_type);
                     setUserBestThumbnail2(json2.data.thumbnail_url);
+                    console.log(json2.data);
 
                     setUserBestImage3(json3.data.media_url);
                     setUserMediaType3(json3.data.media_type);
                     setUserBestThumbnail3(json3.data.thumbnail_url);                                
+                    console.log(json3.data);
             } catch (error) {
                 console.log(error);
             }
