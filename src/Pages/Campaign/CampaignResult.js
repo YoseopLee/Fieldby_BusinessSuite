@@ -1,6 +1,7 @@
 import axios from "axios";
-import { child, get, getDatabase, ref, update } from "firebase/database";
+import { child, get, getDatabase, ref, set, update } from "firebase/database";
 import React, { useEffect, useState } from "react";
+import { CSVDownload, CSVLink } from "react-csv";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "../../Components/Common/Spinner";
@@ -9,22 +10,22 @@ import ShipComplete from "../../Components/Modal/ShipComplete";
 import { useAuth } from "../../Context/authProvider";
 import { realtimeDbService } from "../../fBase";
 import CampaignResultDetail from "./CampaignResultDetail";
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
 
 const CampaignResult = () => {
     const {currentUser} = useAuth();    
     let {id} = useParams();
-    const [userDatas, setUserDatas] = useState([]);
-    const [userFcmToken, setUserFcmToken] = useState([]);
-    const [userUid, setUserUid] = useState([]);
+    const [userDatas, setUserDatas] = useState([]);    
+    const [userName , setUserName] = useState([]);
+    const [userPhone, setUserPhone] = useState([]);
+    const [userAddr, setUserAddr] = useState([]);
+    const [userShipName, setUserShipName] = useState([]);
+    const [userShipNumber, setUserShipNumber] = useState([]);
     const [campaignTitle, setCampaignTitle] = useState('');
+    const [campaignShipComplete, setCampaignShipComplete] = useState('');
     const [loading, setLoading] = useState(true);
     const [datas, setDatas] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
-    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [shipName, setShipName] = useState('');
-    const [shipNumber, setShipNumber] = useState('');    
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);   
 
     useEffect(() => {
         const dbRef = ref(getDatabase());
@@ -40,22 +41,35 @@ const CampaignResult = () => {
                     const data_ent_arr = data_ent.map((d) => Object.assign(d[1]));
                     console.log(data_ent_arr);
                     const newUsersArrays = [];
-                    const userFcmTokenArrays = [];
-                    const userUidArray = [];                    
+                    const userNameArr = [];
+                    const userPhoneArr = [];
+                    const userAddrArr = [];
+                    const userShipNameArr = [];
+                    const userShipNumberArr = [];
                     for (let i = 0; i < data_ent_arr.length; i++) {
                         get(child(dbRef, `users/${data_ent_arr[i]}`))
                         .then((snapshot) => {
                             if (snapshot.exists()) {
                                 const userDataObj = snapshot.val();
+                                console.log(userDataObj);
                                 newUsersArrays.push(userDataObj)
-                                userFcmTokenArrays.push(userDataObj.fcmToken);
-                                userUidArray.push(userDataObj.uid);                                
-                                console.log(newUsersArrays);                  
-                                console.log(userFcmTokenArrays);
-                                console.log(userUidArray);              
+                                userNameArr.push(userDataObj.name);
+                                userPhoneArr.push(userDataObj.phoneNumber);
+                                userAddrArr.push(userDataObj.address.roadAddr);
+                                userShipNameArr.push(userDataObj.campaigns?.[id]?.shipment_name);
+                                userShipNumberArr.push(userDataObj.campaigns?.[id]?.shipment_number);
+                                console.log(newUsersArrays);
+                                console.log(userNameArr);
+                                console.log(userPhoneArr);
+                                console.log(userAddrArr);
+                                console.log(userShipNameArr);
+                                console.log(userShipNumberArr);                                                                
                                 setUserDatas([...newUsersArrays]);
-                                setUserUid([...userUidArray]);
-                                setUserFcmToken([...userFcmTokenArrays]);                               
+                                setUserName([...userNameArr]);
+                                setUserPhone([...userPhoneArr]);
+                                setUserAddr([...userAddrArr]);
+                                setUserShipName([...userShipNameArr]);
+                                setUserShipNumber([...userShipNumberArr]);                                                           
                                 setLoading(false);
                             } else {
                                 console.log("No Data");
@@ -83,6 +97,7 @@ const CampaignResult = () => {
                     const campaignData = snapshot.val();
                     console.log(campaignData.campaignTitle);
                     setCampaignTitle(campaignData.campaignTitle);
+                    setCampaignShipComplete(campaignData.shipComplete);
                 } else {
                     console.log("No Data");
                 }
@@ -93,6 +108,18 @@ const CampaignResult = () => {
         getCampaignData();
     },[])
 
+    const csvHeaders = [        
+        { label : "이름", key : "name"},
+        { label : "전화번호", key : "phone"},
+        { label : "주소", key : "address"},
+        { label : "택배사", key : "shipmentname"},
+        { label : "송장번호", key : "shipmentnumber"},        
+    ];
+
+    const csvData = [        
+        {name : userName, phone : userPhone, address : userAddr, shipmentname : userShipName, shipmentnumber : userShipNumber}        
+    ]
+
     const openModal = () => {
         setModalOpen(true);
     }
@@ -102,43 +129,48 @@ const CampaignResult = () => {
     }
 
     const closeConfirmModal = () => {
-        setConfirmModalOpen(false);        
+        setConfirmModalOpen(false);
+        window.location.reload();        
     }
 
-    const getShipInfo = (shipmentName, shipmentNumber) => {
-        setShipName(shipmentName);
-        setShipNumber(shipmentNumber);
-    }
+    // const getShipInfo = (shipmentName, shipmentNumber) => {
+    //     setShipName(shipmentName);
+    //     setShipNumber(shipmentNumber);        
+    // }
 
-    const sendShipMessage = () => {
-        getShipInfo();
-            try {
-                for (let i = 0; i < userDatas.length; i++) {
-                    update(ref(realtimeDbService, `users/${userUid[i]}/campaigns/${id}`), {
-                        shipment_name : shipName,
-                        shipment_number : shipNumber,
-                    })
-                }
+    // const sendShipMessage = () => {                                
+    //         try {
+    //             for (let i = 0; i < userDatas.length; i++) {
+    //                 update(ref(realtimeDbService, `users/${userUid[i]}/campaigns/${id}`), {
+    //                     shipment_name : shipName,
+    //                     shipment_number : shipNumber,
+    //                 })
+    //             }
 
-                for(let i = 0; i < userFcmToken.length; i++) {
-                    axios.post("https://fcm.googleapis.com/fcm/send", {            
-                        "to" : userFcmToken[i],
-                        "data" : {"type" : "item"},
-                        "notification" : {"title" : `👍🏻'${campaignTitle}' 상품이 발송 완료! `, "body" : `'${campaignTitle}' 상품이 발송되었습니다! 운송장 번호를 확인해 주세요 :)`}            
-                    }, {
-                        headers : {
-                            "Content-Type": "application/json",
-                            "Authorization": "key=AAAAd3VbcvA:APA91bEE-_bu4E6TERxIVo0_66CjRQbfjIDB7FwiQJakRRv5rWVMK95R58UFCDUAS1l79mXKJQ_SQVwxjDgdST49rB43QJG-zD0Mmv6Zn2r4xJRAlNf5R-ZpJvmel3VWUSVAJK9bxOJO"
-                        }
-                    })
-                }
+    //             update(ref(realtimeDbService, `brands/${currentUser.uid}/campaigns/${id}`), {
+    //                 shipComplete : true,
+    //             });
+
+    //             for (let i = 0; i < userFcmToken.length; i++) {
+    //                 const sendMsg = axios.post("https://fcm.googleapis.com/fcm/send", {            
+    //                     "to" : userFcmToken[i],
+    //                     "data" : {"type" : "item"},
+    //                     "notification" : {"title" : `👍🏻'${campaignTitle}' 상품이 발송 완료! `, "body" : `'${campaignTitle}' 상품이 발송되었습니다! 운송장 번호를 확인해 주세요 :)`}            
+    //                 }, {
+    //                     headers : {
+    //                         "Content-Type": "application/json",
+    //                         "Authorization": "key=AAAAd3VbcvA:APA91bEE-_bu4E6TERxIVo0_66CjRQbfjIDB7FwiQJakRRv5rWVMK95R58UFCDUAS1l79mXKJQ_SQVwxjDgdST49rB43QJG-zD0Mmv6Zn2r4xJRAlNf5R-ZpJvmel3VWUSVAJK9bxOJO"
+    //                     }
+    //                 })
+    //                 console.log(sendMsg);
+    //             }
                 
-            } catch (error) {
-                console.log(error.message);
-            }
-            setModalOpen(false);
-            setConfirmModalOpen(true);                                                      
-        }
+    //         } catch (error) {
+    //             console.log(error.message);
+    //         }
+    //         setModalOpen(false);
+    //         setConfirmModalOpen(true);                                                      
+    //     }
 
     return (        
         <CampaignResultCSS>
@@ -167,6 +199,9 @@ const CampaignResult = () => {
                                     <td className="campaign-progress-titles-post">                                        
                                         <span>송장번호</span>                                        
                                     </td>
+                                    <td className="campaign-progress-titles-btn">
+                                        <span>송장 적용하기</span>
+                                    </td>
                                 </tr>
                                 <hr />        
                                 {userDatas.map((userData, idx) => 
@@ -181,19 +216,28 @@ const CampaignResult = () => {
                                         detailaddress={userData.address.detail}
                                         shipment_name={userData.campaigns?.[id]?.shipment_name}
                                         shipment_number={userData.campaigns?.[id]?.shipment_number}
-                                        getShipInfo={getShipInfo}
+                                        fcmToken={userData.fcmToken}
+                                        uid={userData.uid}
+                                        campaignTitle={campaignTitle}
+                                        currentUser={currentUser}
+                                        campaignId={id}
+                                        campaignShipComplete={campaignShipComplete}
                                     />
                                 )}                                
-                            </tbody>                           
+                            </tbody>                                
+                            <CSVLink headers={csvHeaders} data={csvData} filename={`${campaignTitle}-file.csv`} className="ship-download-btn">명단 다운로드</CSVLink>
+                            
+                            
+                            {/*
                             <button className="ship-upload-btn">송장 일괄 업로드</button>                                
-                            <button className="ship-download-btn">명단 다운로드</button>
                             <button className="ship-btn" onClick={openModal}>송장 적용하기</button>
                             <ShipConfirm open={modalOpen} close={closeModal} confirm={sendShipMessage}>
-                                <span className="main-info">배송 정보를 정확하게 입력해주세요</span>                                
+                                 <span className="main-info">배송 정보를 정확하게 입력해주세요</span>                                
                             </ShipConfirm>
                             <ShipComplete open={confirmModalOpen} result={closeConfirmModal}>
                                 <span className="complete-main-info">크리에이터에게 배송 정보를 전달했습니다.</span>
-                            </ShipComplete>                                                                                            
+                            </ShipComplete> 
+                            */}                                                                                                                                                                           
                         </table>                        
                     )}
                 </>
@@ -298,7 +342,23 @@ const CampaignResultCSS = styled.div`
                 min-height: 32px;
                 display : flex;
                 align-items : center;
-                justify-content : flex-start;
+                justify-content : center;                
+                span {
+                    text-align : center;
+                    font-weight : 400;
+                    font-size : 13px;
+                }
+            }
+
+            .campaign-progress-titles-btn {
+                font-weight: 500;                
+                position: relative;
+                vertical-align: top;
+                width : 15%;
+                min-height: 32px;
+                display : flex;
+                align-items : center;
+                justify-content : center;
                 margin-left : 36px;
                 span {
                     text-align : center;
@@ -384,7 +444,7 @@ const CampaignResultCSS = styled.div`
                 position: relative;
                 vertical-align: top;                              
                 min-height: 32px;
-                width : 40%;
+                width : 45%;
                 display : flex;                
                 
                 
@@ -422,8 +482,7 @@ const CampaignResultCSS = styled.div`
                 width : 15%;
                 display : flex;
                 align-items : center;
-                justify-content : flex-start;
-                margin-left : 36px;
+                justify-content : flex-start;                
                 .table-input {
                     border : none;
                     height : 48px;
@@ -438,7 +497,14 @@ const CampaignResultCSS = styled.div`
                     font-size: 15px;
                     line-height: 18px;
                     text-align : center;
+
                 }
+            }
+            .selected-data-btn {
+                width : 15%;
+                display : flex;
+                align-items : center;
+                justify-content : center;
             }
         }
     }
@@ -476,7 +542,7 @@ const CampaignResultCSS = styled.div`
         position : fixed;
         width : 160px;
         height: 48px;
-        left : -40%;
+        left : 80%;
         top : 85%;
         right : 0;
         bottom : 0;
@@ -490,11 +556,12 @@ const CampaignResultCSS = styled.div`
         font-weight : 700;
         &:active {
             top : 85.1%;
-            left : -39.9%;
+            left : 80.1%;
         }
         &:hover {
             background : #22Baa8;
             color : #ffffff;
+            border-color : #fff;
         }
     }
             
@@ -502,36 +569,6 @@ const CampaignResultCSS = styled.div`
         background : transparent;
         border : 1px solid #766F6F;
         border-radius : 5px;
-        position : fixed;
-        width : 160px;
-        height: 48px;
-        left : 60%;
-        top : 85%;
-        right : 0;
-        bottom : 0;
-        margin-left : auto;
-        margin-right : auto;
-        margin-top : auto;
-        margin-bottom : auto;
-        display : flex;
-        align-items : center;
-        justify-content : center;
-        font-weight : 700;
-        &:active {
-            top : 85.1%;
-            left : 60.1%;
-        }
-        &:hover {
-            background : #22Baa8;
-            color : #ffffff;
-        }
-    }
-
-    .ship-btn {
-        background : #303030;
-        border-radius : 5px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
-        border : 1px solid #e7e7e7;
         position : fixed;
         width : 160px;
         height: 48px;
@@ -547,13 +584,38 @@ const CampaignResultCSS = styled.div`
         align-items : center;
         justify-content : center;
         font-weight : 700;
+        font-size : 14px;
+        text-decoration : none;
+        color : #000000;
+        &:active {
+            top : 85.1%;
+            left : 80.1%;
+        }
+        &:hover {
+            background : #22Baa8;
+            color : #ffffff;
+            border-color : #fff;
+        }
+    }
+
+    .ship-btn {
+        background : #303030;
+        border-radius : 5px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
+        border : 1px solid #e7e7e7;       
+        height: 48px;        
+        display : flex;
+        align-items : center;
+        justify-content : center;
+        font-weight : 700;
         color : #ffffff;
         &:active {        
             top : 85.2%;
             left : 80.2%;
         }        
         &:hover {
-            background : #22Baa8;                              
+            background : #22Baa8;
+            transition : all .3s;                              
         }   
     }    
 `
