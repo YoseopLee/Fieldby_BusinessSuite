@@ -136,7 +136,8 @@ const CampaignAdmin = () => {
                 recruitingNumber : recruitingNumber,
                 selectionDate : selectionDate,
                 uploadDate : uploadDate,
-                itemDate : itemDate,                                              
+                itemDate : itemDate,
+                itemPrice : itemPrice,                                              
         });
 
             alert('캠페인 등록이 완료되었습니다.');
