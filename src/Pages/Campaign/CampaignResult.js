@@ -1,7 +1,7 @@
 import axios from "axios";
 import { child, get, getDatabase, ref, set, update } from "firebase/database";
 import React, { useEffect, useState } from "react";
-import { CSVDownload, CSVLink } from "react-csv";
+import { CSVLink } from "react-csv";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "../../Components/Common/Spinner";
@@ -24,6 +24,7 @@ const CampaignResult = () => {
     const [campaignShipComplete, setCampaignShipComplete] = useState('');
     const [loading, setLoading] = useState(true);
     const [datas, setDatas] = useState('');
+    const [campaignPrice, setCampaignPrice] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [confirmModalOpen, setConfirmModalOpen] = useState(false);   
 
@@ -52,7 +53,7 @@ const CampaignResult = () => {
                             if (snapshot.exists()) {
                                 const userDataObj = snapshot.val();
                                 console.log(userDataObj);
-                                newUsersArrays.push(userDataObj)
+                                newUsersArrays.push(userDataObj);
                                 userNameArr.push(userDataObj.name);
                                 userPhoneArr.push(userDataObj.phoneNumber);
                                 userAddrArr.push(userDataObj.address.roadAddr);
@@ -98,6 +99,8 @@ const CampaignResult = () => {
                     console.log(campaignData.campaignTitle);
                     setCampaignTitle(campaignData.campaignTitle);
                     setCampaignShipComplete(campaignData.shipComplete);
+                    console.log(campaignData.itemPrice);
+                    setCampaignPrice(campaignData.itemPrice);
                 } else {
                     console.log("No Data");
                 }
@@ -222,6 +225,7 @@ const CampaignResult = () => {
                                         currentUser={currentUser}
                                         campaignId={id}
                                         campaignShipComplete={campaignShipComplete}
+                                        itemPrice={campaignPrice}
                                     />
                                 )}                                
                             </tbody>                                

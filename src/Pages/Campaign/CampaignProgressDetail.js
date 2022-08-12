@@ -174,32 +174,44 @@ const CampaignProgressDetail = ({ uid, fcmToken ,name, height, profile,simpleadd
                             <div className="user-image">
                                 
                                     <div className="user-images-wrapper">
-                                        {userMediaType1 === 'VIDEO' ? (
+                                        {userMediaType1 === 'VIDEO' ? (                                            
                                             <a href={userBestImage1} target="_blank">
-                                                <img src={userBestThumbnail1} alt="1" />                                                                                                            
-                                            </a>
-                                        ) : ( 
+                                                <div className="user-image-box"> 
+                                                    <img src={userBestThumbnail1} alt="1" />                                                                                                            
+                                                </div>
+                                            </a>                                        
+                                        ) : (                                            
                                             <a href={userBestImage1} target="_blank">
-                                                <img src={userBestImage1} alt = "1" />
-                                            </a>
+                                                <div className="user-image-box">  
+                                                    <img src={userBestImage1} alt = "1" />
+                                                </div>
+                                            </a>                                            
                                         )}
-                                        {userMediaType2 === 'VIDEO' ? (
+                                        {userMediaType2 === 'VIDEO' ? (                                            
                                             <a href={userBestImage2} target="_blank">
-                                                <img src={userBestThumbnail2} alt="2" />                                                                                                            
-                                            </a>
-                                        ) : (
+                                                <div className="user-image-box"> 
+                                                    <img src={userBestThumbnail2} alt="2" />                                                                                                            
+                                                </div>
+                                            </a>                                            
+                                        ) : (                                            
                                             <a href={userBestImage2} target="_blank">
-                                                <img src={userBestImage2} alt = "2" />
-                                            </a>
+                                                <div className="user-image-box"> 
+                                                    <img src={userBestImage2} alt = "2" />
+                                                </div>
+                                            </a>                                            
                                         )}
-                                        {userMediaType3 === 'VIDEO' ? (
+                                        {userMediaType3 === 'VIDEO' ? (                                             
                                             <a href={userBestImage3} target="_blank">
-                                                <img src={userBestThumbnail3} alt="3" />                                                                                                            
-                                            </a>
-                                        ) : (
+                                                <div className="user-image-box">
+                                                    <img src={userBestThumbnail3} alt="3" />                                                                                                            
+                                                </div>
+                                            </a>                                            
+                                        ) : (                                            
                                             <a href={userBestImage3} target="_blank">
-                                                <img src={userBestImage3} alt = "3" />
-                                            </a>
+                                                <div className="user-image-box"> 
+                                                    <img src={userBestImage3} alt = "3" />
+                                                </div>
+                                            </a>                                        
                                         )}                                                                           
                                     </div>                                                                                                                                            
                             </div>
@@ -374,22 +386,31 @@ const CampaignProgressDetailCSS = styled.div`
         .user-images-container {
             display : flex;
             justify-content : center;
-            align-items : center;            
+            align-items : center; 
             .user-image {
-                overflow-x : auto;
-                .user-images-wrapper {
-                    
+                
+                .user-images-wrapper {   
+                    display : flex;
+                    justify-content : center;
+                    align-items : center;                  
                     a {
-                        height : 150px;
-                        width : 150px;
-                        img {
+                        .user-image-box {
                             margin-left : 16px;
+                            height : 160px;
                             width : 160px;
-                            height : 160px;     
-                            border-radius : 6px;                                                   
-                        }
-                    }
-                    
+                            overflow : hidden;
+                            position : relative;
+                            border-radius : 6px;
+                            img {
+                                position: absolute;
+                                width: 100%;
+                                /* height: 100%; */
+                                top: 50%; 
+                                left: 50%;
+                                transform: translate(-50%, -50%);                                                  
+                            }
+                        }                                                                                                                        
+                    }                                    
                 }
                                 
             }

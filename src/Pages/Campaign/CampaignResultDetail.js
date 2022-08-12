@@ -2,7 +2,7 @@ import axios from "axios";
 import { ref, update } from "firebase/database";
 import React, { useState } from "react";
 import { realtimeDbService } from "../../fBase";
-const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress, detailaddress, shipment_name, shipment_number, fcmToken ,uid, campaignTitle, currentUser, campaignId, campaignShipComplete }) => {
+const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress, detailaddress, shipment_name, shipment_number, fcmToken ,uid, campaignTitle, currentUser, campaignId, campaignShipComplete, itemPrice }) => {
     const [shipName, setShipName] = useState('');
     const [shipNumber, setShipNumber] = useState('');    
 
@@ -10,6 +10,10 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
         update(ref(realtimeDbService, `users/${uid}/campaigns/${campaignId}`), {
             shipment_name : shipName,
             shipment_number : shipNumber,
+        })
+
+        update(ref(realtimeDbService, `users/${uid}/`), {
+            reward : itemPrice
         })
 
         update(ref(realtimeDbService, `brands/${currentUser.uid}/campaigns/${campaignId}`), {
@@ -29,7 +33,6 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
         window.alert(`${name}님에게 배송정보가 빌송되었습니다!`);
     }
 
-        
     return (        
             <tr className="campaign-progress-table">
                 <td className="selected-data-number">                    
