@@ -237,11 +237,21 @@ const CampaignContainerCSS = styled.div`
                         display : flex;
                         justify-content : flex-start;
                         align-items : center;
-                        .campaign-mainImage {
-                            width : 70px;
-                            height : 70px;
+                        .campaign-main-image-box {
+                            overflow : hidden;
+                            position : relative;
+                            width : 75px;
+                            height : 75px;
                             margin-right : 20px;
-                        }
+                            border-radius : 6px;
+                            .campaign-main-image {
+                                position : absolute;
+                                width : 100%;
+                                top : 50%;
+                                left : 50%;
+                                transform : translate(-50%, -50%);                                                
+                            }
+                        }                        
                     }
                     span {
                         font-weight: 400;

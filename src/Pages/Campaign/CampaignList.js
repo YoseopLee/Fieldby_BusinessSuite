@@ -10,7 +10,9 @@ const CampaignList = ({id, mainImageUrl,campaignTitle, recruitingDate, dueDate,r
                 </td>
                 <td className="campaign-data-profile">
                     <div className="campaign-data-wrapper">
-                        <img className="campaign-mainImage" src={mainImageUrl} alt="mainImage" />
+                        <div className="campaign-main-image-box">
+                            <img className="campaign-main-image" src={mainImageUrl} alt="mainImage" />
+                        </div>
                         <span>{campaignTitle}</span>
                     </div>                    
                 </td>
