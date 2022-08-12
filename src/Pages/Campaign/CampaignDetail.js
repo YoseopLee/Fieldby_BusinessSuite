@@ -256,13 +256,18 @@ const CampaignDetailCSS = styled.div`
             display : flex;           
             height : 100%;
             .campaign-detail-top-image-box{
-                height : 100%;
+                width : 150px;
                 margin-left : 16px;
                 margin-right : 18px;
+                position : relative;
+                overflow : hidden;
+                border-radius : 12px;
                 .campaign-detail-top-image {
-                    border-radius : 12px;
-                    width : 150px;
-                    height : 100%;
+                    position : absolute;                    
+                    width : 100%;
+                    top : 50%;
+                    left : 50%;
+                    transform : translate(-50%, -50%);                                        
                 }
             }
             
