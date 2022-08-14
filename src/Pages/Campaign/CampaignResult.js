@@ -119,7 +119,7 @@ const CampaignResult = () => {
         { label : "송장번호", key : "shipmentnumber"},        
     ];
 
-    const csvData = [        
+    const csvData = [
         {name : userName, phone : userPhone, address : userAddr, shipmentname : userShipName, shipmentnumber : userShipNumber}        
     ]
 
@@ -258,6 +258,7 @@ const CampaignResult = () => {
 }
 
 const CampaignResultCSS = styled.div`
+    margin-bottom : 100px;
     .spinner-cm {
         position : absolute;
         left : 50%;
@@ -456,6 +457,7 @@ const CampaignResultCSS = styled.div`
                     align-items : center;
                     display : flex;
                     justify-content : flex-start;
+                    width : 90%;
                     .address-flex-box {
                         display : flex;
                         flex-direction : column;
@@ -570,7 +572,7 @@ const CampaignResultCSS = styled.div`
     }
             
     .ship-download-btn {
-        background : transparent;
+        background : white;
         border : 1px solid #766F6F;
         border-radius : 5px;
         position : fixed;
@@ -596,6 +598,7 @@ const CampaignResultCSS = styled.div`
             left : 80.1%;
         }
         &:hover {
+            transition : all .3s;
             background : #22Baa8;
             color : #ffffff;
             border-color : #fff;

@@ -154,7 +154,7 @@ const CampaignProgress = () => {
                     });
                     set(ref(realtimeDbService, `campaigns/${id}/users/`), {
                         [v] : v
-                    })                                                     
+                    })                    
                 } catch (error) {
                     console.log(error.message);
                 }                
