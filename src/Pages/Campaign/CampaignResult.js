@@ -111,17 +111,25 @@ const CampaignResult = () => {
         getCampaignData();
     },[])
 
-    const csvHeaders = [        
+    const csvHeaders = [
         { label : "이름", key : "name"},
         { label : "전화번호", key : "phone"},
         { label : "주소", key : "address"},
         { label : "택배사", key : "shipmentname"},
-        { label : "송장번호", key : "shipmentnumber"},        
+        { label : "송장번호", key : "shipmentnumber"},
     ];
 
-    const csvData = [
-        {name : userName, phone : userPhone, address : userAddr, shipmentname : userShipName, shipmentnumber : userShipNumber}        
-    ]
+    const csvDataArr = []
+    for (let i = 0; i < userDatas.length; i++) {
+        csvDataArr.push({
+            name : userName[i],
+            phone : userPhone[i],
+            address : userAddr[i],
+            shipmentname : userShipName[i],
+            shipmentnumber : userShipNumber[i]
+        })
+    }
+        
 
     const openModal = () => {
         setModalOpen(true);
@@ -133,7 +141,7 @@ const CampaignResult = () => {
 
     const closeConfirmModal = () => {
         setConfirmModalOpen(false);
-        window.location.reload();        
+        window.location.reload();
     }
 
     // const getShipInfo = (shipmentName, shipmentNumber) => {
@@ -229,7 +237,7 @@ const CampaignResult = () => {
                                     />
                                 )}                                
                             </tbody>                                
-                            <CSVLink headers={csvHeaders} data={csvData} filename={`${campaignTitle}-file.csv`} className="ship-download-btn">명단 다운로드</CSVLink>
+                            <CSVLink headers={csvHeaders} data={csvDataArr} filename={`${campaignTitle}-file.csv`} className="ship-download-btn">명단 다운로드</CSVLink>
                             
                             
                             {/*
