@@ -13,7 +13,7 @@ import CampaignProgressDetail from "./CampaignProgressDetail";
 const CampaignProgress = () => {
     const {currentUser} = useAuth();
     let {id} = useParams();
-    const [datas, setDatas] = useState("");
+    const [datas, setDatas] = useState([]);
     const [userDatas, setUserDatas] = useState([]);
     const [checkedItems, setCheckedItems] = useState(new Set());
     const [checkedUserFcmToken, setCheckedUserFcmToken] = useState(new Set());
@@ -149,9 +149,7 @@ const CampaignProgress = () => {
                         selectCompleted : true
                     });
                     // brands => user 필드 지우기
-                    remove(ref(realtimeDbService, `brands/${currentUser.uid}/campaigns/${id}/users/`), {
-                        [v] : v
-                    });
+                    remove(ref(realtimeDbService, `brands/${currentUser.uid}/campaigns/${id}/users/${v}`));
                     set(ref(realtimeDbService, `campaigns/${id}/users/`), {
                         [v] : v
                     })                    
@@ -227,19 +225,11 @@ const CampaignProgress = () => {
                 </div> 
             ) : (
                 <>
-                {isUserSelected ? (
-                    <>
-                        {loading ? (
-                            <div className="spinner-cm">
-                                <Spinner />
-                            </div>
-                        ) : (
-                            <div className="campaign-empty">
-                                <img src="/images/campaign-empty.png" alt="no-campaign"/> 
-                                <span>이미 인플루언서 선정이 완료된 캠페인이에요.</span>
-                            </div>
-                        )}
-                    </>
+                {isUserSelected ? (                    
+                    <div className="campaign-empty">
+                        <img src="/images/campaign-empty.png" alt="no-campaign"/> 
+                        <span>이미 인플루언서 선정이 완료된 캠페인이에요.</span>
+                    </div>                        
                 ) : (
                     <>
                         {loading ? (
