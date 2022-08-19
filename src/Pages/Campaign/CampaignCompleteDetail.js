@@ -40,43 +40,49 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl}) => {
         getPostDatas();
     }, [])
 
-    return (
+    return (        
         <CampaignCompleteDetailCSS>
-            {loading ? (
-                <div className="spinner-cm">
-                    <Spinner />
-                </div>
+            {postImageUrl ? (
+                <>
+                {loading ? (
+                    <div className="spinner-cm">
+                        <Spinner />
+                    </div>
+                ) : (
+                    <div className="campaign-complete-details">
+                        <div className="camapaign-complete-detail-info-wrapper">
+                            {postType === 'VIDEO' ? (
+                                <a href={postImage} target="_blank">
+                                    <video src={postImage} alt="posted" className="campaign-complete-detail-img"/>
+                                </a>
+                                
+                            ) : 
+                            (   
+                                <a href={postImage} target="_blank">
+                                    <img src={postImage} alt="posted" className="campaign-complete-detail-img"/>
+                                </a>
+                                
+                            )}  
+                        </div>
+
+                        <div className="user-instagram-logo-name">
+                            <a href={`https://www.instagram.com/${igname}`} className="instagram-link" target="_blank">
+                                <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
+                                <span className="user-instagram-name">{igname}</span>
+                            </a>
+                        </div>
+
+                        <div className="campaign-complete-detail-user-info">
+                            <span className="camapaign-complete-detail-likes">좋아요 &nbsp;{postLikes}</span>                                                
+                            <span className="camapaign-complete-detail-comments">댓글 &nbsp;{postComments}</span>
+                            <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
+                        </div>                                                                                                        
+                    </div>
+                )}
+                </>
             ) : (
-                <div className="campaign-complete-details">
-                    <div className="camapaign-complete-detail-info-wrapper">
-                        {postType === 'VIDEO' ? (
-                            <a href={postImage} target="_blank">
-                                <video src={postImage} alt="posted" className="campaign-complete-detail-img"/>
-                            </a>
-                            
-                        ) : 
-                        (   
-                            <a href={postImage} target="_blank">
-                                <img src={postImage} alt="posted" className="campaign-complete-detail-img"/>
-                            </a>
-                            
-                        )}  
-                    </div>
-
-                    <div className="user-instagram-logo-name">
-                        <a href={`https://www.instagram.com/${igname}`} className="instagram-link" target="_blank">
-                            <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
-                            <span className="user-instagram-name">{igname}</span>
-                        </a>
-                    </div>
-
-                    <div className="campaign-complete-detail-user-info">
-                        <span className="camapaign-complete-detail-likes">좋아요 &nbsp;{postLikes}</span>                                                
-                        <span className="camapaign-complete-detail-comments">댓글 &nbsp;{postComments}</span>
-                        <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
-                    </div>                                                                                                        
-                </div>
-            )}            
+                null
+            )}                        
         </CampaignCompleteDetailCSS>
     )
 }
