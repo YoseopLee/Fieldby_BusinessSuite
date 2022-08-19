@@ -16,9 +16,9 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
             shipment_number : shipNumber,
         })
 
-        update(ref(realtimeDbService, `users/${uid}/`), {
-            reward : itemPrice
-        })
+        // update(ref(realtimeDbService, `users/${uid}/`), {
+        //     reward : itemPrice
+        // })
 
         update(ref(realtimeDbService, `brands/${currentUser.uid}/campaigns/${campaignId}`), {
             shipComplete : true
