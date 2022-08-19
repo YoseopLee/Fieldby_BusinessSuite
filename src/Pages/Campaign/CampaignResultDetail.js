@@ -1,10 +1,14 @@
 import axios from "axios";
 import { ref, update } from "firebase/database";
 import React, { useState } from "react";
+import ShipConfirm from "../../Components/Modal/ShipComfirm";
+import ShipComplete from "../../Components/Modal/ShipComplete";
 import { realtimeDbService } from "../../fBase";
 const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress, detailaddress, shipment_name, shipment_number, fcmToken ,uid, campaignTitle, currentUser, campaignId, campaignShipComplete, itemPrice }) => {
     const [shipName, setShipName] = useState('');
-    const [shipNumber, setShipNumber] = useState('');    
+    const [shipNumber, setShipNumber] = useState('');
+    const [modalOpen, setModalOpen] = useState(false);    
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
     const shipInfoHandler = () => {
         update(ref(realtimeDbService, `users/${uid}/campaigns/${campaignId}`), {
@@ -30,7 +34,20 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
                 "Authorization": "key=AAAAd3VbcvA:APA91bEE-_bu4E6TERxIVo0_66CjRQbfjIDB7FwiQJakRRv5rWVMK95R58UFCDUAS1l79mXKJQ_SQVwxjDgdST49rB43QJG-zD0Mmv6Zn2r4xJRAlNf5R-ZpJvmel3VWUSVAJK9bxOJO"
             }
         })
-        window.alert(`${name}님에게 배송정보가 빌송되었습니다!`);
+        setModalOpen(false);
+        setConfirmModalOpen(true);        
+    }
+
+    const openModal = () => {
+        setModalOpen(true);
+    }
+
+    const closeModal = () => {
+        setModalOpen(false);
+    }
+
+    const closeConfirmModal = () => {
+        setConfirmModalOpen(false);
     }
 
     return (        
@@ -95,8 +112,16 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
                 )}                                                
                 </td>
                 <td className="selected-data-btn">
-                    <button className="ship-btn" onClick={shipInfoHandler}>송장 적용하기</button>
-                </td>                
+                    <button className="ship-btn" onClick={openModal}>송장 적용하기</button>
+                </td>
+                <ShipConfirm open={modalOpen} close={closeModal} confirm={shipInfoHandler}>
+                    <span className="main-info">택배사 : {shipName} 송장번호 : {shipNumber}</span>
+                    <span className="main-ask">크리에이터에게 배송정보 전달 후 수정이 불가능합니다.</span>
+                    <span className="main-ask">배송정보를 전달하시겠습니까?</span>
+                </ShipConfirm>
+                <ShipComplete open={confirmModalOpen} result={closeConfirmModal}>
+                    <span className="complete-main-info">{name}님에게 배송정보가 전달되었습니다!</span>
+                </ShipComplete>                
             </tr>        
     )
 }
