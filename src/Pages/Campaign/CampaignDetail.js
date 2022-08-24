@@ -99,7 +99,7 @@ const CampaignDetail = () => {
 
     const closeReportModal = () => {
         setReportModalOpen(false);
-        window.location.reload();
+        
     }
     
     return (
@@ -171,7 +171,7 @@ const CampaignDetail = () => {
                         <Link className={`campaign-register-progress ${progressBtn ? 'active' : 'no'}`} id="progress" to='progress'>신청 현황</Link>
                         <Link className={`campaign-register-result ${resultBtn ? 'active' : 'no'}`} to='result'>선정 결과</Link>
                         <Link className={`campaign-complete-posts ${completeBtn ? 'active' : 'no'}`} to='complete'>완료 포스팅</Link>
-                        <a className={`campaign-report ${reportBtn ? 'active' : 'no'}`} onClick={openReportModal}>캠페인 보고서</a>
+                        <div className={`campaign-report ${reportBtn ? 'active' : 'no'}`} onClick={openReportModal}>캠페인 보고서</div>
                     </div>
                     <Outlet />
                 </div>

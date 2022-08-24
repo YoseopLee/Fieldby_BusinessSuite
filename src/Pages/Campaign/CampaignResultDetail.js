@@ -140,7 +140,7 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
                         <option value="경동택배">경동택배</option>
                         <option value="일양택배">일양택배</option>
                     </select>
-                    <input type='text' placeholder="배송장번호" className="table-input" onChange={(e) => {
+                    <input type='text' placeholder="운송장번호" className="table-input" onChange={(e) => {
                         setShipChangeNumber(e.target.value);
                     }}/>
                 </ShipChangeModal>
@@ -186,7 +186,7 @@ const CampaignResultDetail = ({id, name, profile, phoneNumber, zipno,roadaddress
                     </div>                    
                 </td>
                 <td className="selected-data-post">                                                                            
-                    <input type='text' placeholder="배송장번호" className="table-input" onChange={(e) => {
+                    <input type='text' placeholder="운송장번호" className="table-input" onChange={(e) => {
                         setShipNumber(e.target.value);
                     }}/>                
                 </td>
