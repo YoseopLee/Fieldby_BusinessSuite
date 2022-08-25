@@ -41,8 +41,10 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
     return (
         <CampaignReportTop3CSS>
             {mediaUrl ? (
-                <div className="report-best-box">        
-                    <img src={mediaUrl} alt="best-img" className="report-best-image"/>
+                <div className="report-best-box">
+                    <a href={mediaUrl} target="_blank">
+                        <img src={mediaUrl} alt="best-img" className="report-best-image"/>
+                    </a>                            
                     <div className="user-instagram-logo-name">
                         <a href={`https://www.instagram.com/${username}`} className="instagram-link" target="_blank">
                             <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
