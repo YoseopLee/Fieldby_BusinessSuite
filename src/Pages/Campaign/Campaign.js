@@ -91,8 +91,8 @@ const Campaign = () => {
                                             id={brandCampaignData.id}
                                             mainImageUrl={brandCampaignData.mainImageUrl}
                                             campaignTitle = {brandCampaignData.campaignTitle}
-                                            recruitingDate = {brandCampaignData.recruitingDate}
-                                            dueDate = {brandCampaignData.dueDate}
+                                            recruitingDate = {brandCampaignData?.recruitingDate}
+                                            dueDate = {brandCampaignData?.dueDate}
                                             recruitingNumber = {brandCampaignData.recruitingNumber}                                                                                                                                                                                                                                                                               
                                         />
                                     )}                                                                               

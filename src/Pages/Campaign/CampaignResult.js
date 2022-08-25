@@ -206,12 +206,12 @@ const CampaignResult = () => {
                                     </td>
                                     <td className="campaign-progress-titles-address">                                
                                         <span>주소</span>                                            
-                                    </td>
+                                    </td>                                    
                                     <td className="campaign-progress-titles-post">                                        
-                                        <span>송장번호</span>                                        
+                                        <span>배송정보</span>                                        
                                     </td>
                                     <td className="campaign-progress-titles-btn">
-                                        <span>송장 적용하기</span>
+                                        <span>송장 적용 및 수정</span>
                                     </td>
                                 </tr>
                                 <hr />        
@@ -336,7 +336,7 @@ const CampaignResultCSS = styled.div`
                 font-weight: 500;                
                 position: relative;
                 vertical-align: top;
-                width : 40%;
+                width : 30%;
                 min-height: 32px;
                 display : flex;
                 align-items : center;
@@ -457,7 +457,7 @@ const CampaignResultCSS = styled.div`
                 position: relative;
                 vertical-align: top;                              
                 min-height: 32px;
-                width : 45%;
+                width : 35%;
                 display : flex;                
                 
                 
@@ -496,7 +496,7 @@ const CampaignResultCSS = styled.div`
                 width : 15%;
                 display : flex;
                 align-items : center;
-                justify-content : flex-start;                
+                justify-content : space-around;                
                 .table-input {
                     border : none;
                     height : 48px;

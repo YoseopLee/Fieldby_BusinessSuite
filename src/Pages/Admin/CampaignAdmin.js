@@ -29,7 +29,8 @@ const CampaignAdmin = () => {
     const [leastFeed, setLeastFeed] = useState(0);
     const [maintain, setMaintain] = useState(0);
     const [selectionDate, setSelectionDate] = useState('');
-    const [uploadDate, setUploadDate] = useState(''); 
+    const [uploadDate, setUploadDate] = useState('');
+    const [campaignPrice, setCampaignPrice] = useState(0); 
     
 
     function handleChange(event) {
@@ -124,6 +125,7 @@ const CampaignAdmin = () => {
                 maintain : maintain,
                 selectionDate : selectionDate,
                 uploadDate : uploadDate,
+                campaignPrice : campaignPrice
             });
 
             const campaignKey = campaignUid.key;
@@ -137,7 +139,8 @@ const CampaignAdmin = () => {
                 selectionDate : selectionDate,
                 uploadDate : uploadDate,
                 itemDate : itemDate,
-                itemPrice : itemPrice,                                              
+                itemPrice : itemPrice,
+                campaignPrice : campaignPrice                                              
         });
 
             alert('캠페인 등록이 완료되었습니다.');
@@ -180,7 +183,10 @@ const CampaignAdmin = () => {
             <input type="datetime-local" placeholder="캠페인 만료 기한" onChange={(e) => {
                 setDueDate(e.target.value);
             }} />
-
+            <span>캠페인 가격</span>
+            <input type="text" placeholder="캠페인 가격" onChange={(e) => {
+                setCampaignPrice(e.target.value);
+            }} />
             <input type="text" placeholder="모집인원" onChange={(e) => {
                 setRecruitingNumber(e.target.value);
             }}/>

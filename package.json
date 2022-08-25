@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "@testing-library/jest-dom": "^5.16.4",
@@ -16,6 +17,7 @@
     "firebase": "^9.8.1",
     "firebase-tools": "^11.1.0",
     "moment": "^2.29.4",
+    "node-schedule": "^2.1.0",
     "react": "^18.1.0",
     "react-csv": "^2.2.2",
     "react-dom": "^18.1.0",

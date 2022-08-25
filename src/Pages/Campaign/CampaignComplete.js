@@ -34,9 +34,10 @@ const CampaignComplete = () => {
                                 console.log(userDataObj);
                                 userArray.push(userDataObj);
                                 console.log(userArray);
-                                setUserDatas([...userArray]);
-                                
+                                setUserDatas([...userArray]);                                
                                 const userSelectedData = userDataObj.campaigns;
+                                const userPost = userArray?.[0].campaigns?.[id]?.images?.[0];                                
+                                setUserPostDatas(userPost);
                                 console.log(userSelectedData);                                                          
                             } else {
                                 console.log("No data");
@@ -57,7 +58,7 @@ const CampaignComplete = () => {
 
     return (
         <CampaignCompleteCSS>
-            {userDatas?.[0] ? (
+            {userPostDatas ? (
                 <>
                 <span className="campaign-complete-title">완료 포스팅</span>            
                 <div className="campaign-complete-posts-wrapper">
@@ -73,10 +74,9 @@ const CampaignComplete = () => {
                 </div>
                 </>
             ) : (
-                <div className="campaign-complete-empty">
+                <div className="campaign-empty">
                     <img src="/images/campaign-empty.png" alt="no-campaign"/> 
-                    <span className="campaign-not-yet">아직 캠페인이 완료되지 않았습니다.</span>
-                    <span className="campaign-not-yet-light">페이지 상단에서 진행현황을 확인할 수 있습니다.</span>
+                    <span>아직 포스트를 등록한 인플루언서가 없습니다.</span>                    
                 </div>
             )}            
                     
@@ -125,6 +125,26 @@ const CampaignCompleteCSS = styled.div`
         .campaign-not-yet-light {
             margin-top : 8px;
             font-size : 13px;
+            color : #303030;
+        }
+    }
+
+    .campaign-empty {
+        display : flex;
+        flex-direction : column;
+        align-items : center;
+        padding-top : 200px;
+        img {
+            width : 65px;
+            height : 65px;
+        }
+
+        span {
+            margin-top : 16px;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 19px;
             color : #303030;
         }
     }

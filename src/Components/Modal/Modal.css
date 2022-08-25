@@ -138,3 +138,19 @@
       opacity: 1;
     }
   }
+  .shipment-names {
+    
+    border: 1px solid #303030;
+    border-radius: 13px;
+    height : 48px;
+    
+    padding : 8px;
+}
+.table-input {
+  border : none;
+  height : 48px;
+  background: #F1F1F1;
+  border-radius: 13px;
+  padding-left : 12px;
+  color : #766F6F;                    
+}
