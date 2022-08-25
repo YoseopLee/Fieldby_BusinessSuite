@@ -1,10 +1,10 @@
+import { ResponsiveBar } from "@nivo/bar";
 import axios from "axios";
 import { child, get, getDatabase, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../../Context/authProvider";
-import CampaignInsightGraph from "./CampaignInsightGraph";
 import CampaignReportTop3 from "./CampaignReportTop3";
 
 const CampaignReport = () => {
@@ -21,6 +21,7 @@ const CampaignReport = () => {
     const [campaignLikes, setCampaignLikes] = useState(0);
     const [campaignComments, setCampaignComments] = useState(0);
     const [sumFollowers, setSumFollowers] = useState(0);    
+    const [day, setDay] = useState('');
     const followerArray = [];
     const userArray = [];
     const userTokenArray = [];
@@ -28,6 +29,9 @@ const CampaignReport = () => {
     const reachArray = [];
     const likesArray = [];
     const engagementArray = [];
+    const impressionArray = [];
+
+    
 
     useEffect(() => {
         const dbRef = ref(getDatabase());
@@ -87,7 +91,9 @@ const CampaignReport = () => {
 
                                         const impressions = json1.data.data[1].values[0].value;
                                         console.log(impressions);
-                                        setCampaignImpressions(impressions);
+                                        impressionArray.push(impressions);
+                                        const sum_Impression = impressionArray.reduce((a,b) => a+b, 0);
+                                        setCampaignImpressions(sum_Impression);
 
                                         const engagement = json1.data.data[2].values[0].value;                                                                                
                                         engagementArray.push(engagement);
@@ -144,7 +150,34 @@ const CampaignReport = () => {
                 
         getCompleteData();
     }, []);
-        
+
+    useEffect(() => {
+        const getToday = () => {
+            const today = new Date();
+            const day = today.getDate();
+            const month = ("0" + (1 + today.getMonth())).slice(-2);
+            const time = today.getHours();
+            console.log(today);
+            setDay(`${month} / ${day}, ${time}:00`);
+        }
+        getToday();
+    }, [])
+    
+
+    const data = [
+        {
+          "country": '실시간 인사이트',
+          "총 인터렉션": campaignEngagement,
+          "총 인터렉션Color": "hsl(93, 70%, 50%)",
+          "총 도달": campaignReachs,
+          "총 도달Color": "hsl(106, 70%, 50%)",
+          "총 노출": campaignImpressions,
+          "총 노출Color": "hsl(60, 70%, 50%)",                                            
+        },       
+      ]
+
+    const colors = ["#22Baa8", "#797979", "#dcdcdc"];
+            
     return (
         <CampaignReportCSS>
             <div className="report-container">
@@ -191,9 +224,107 @@ const CampaignReport = () => {
 
             <div className="report-container">
                 <span className="report-container-title">인사이트 데이터</span>
-                <CampaignInsightGraph 
-                    
-                />
+                <div className="report-graph-container">
+                    <ResponsiveBar 
+                        data={data}
+                        keys={[
+                            '총 인터렉션',
+                            '총 도달',
+                            '총 노출',                                                                            
+                        ]}
+                        indexBy="country"
+                        margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+                        padding={0.7}
+                        valueScale={{ type: 'linear' }}
+                        indexScale={{ type: 'band', round: true }}
+                        colors={colors}                                                                        
+                        defs={[
+                            {
+                                id: 'dots',
+                                type: 'patternDots',
+                                background: 'inherit',
+                                color: '#38bcb2',
+                                size: 4,
+                                padding: 1,
+                                stagger: true
+                            },
+                            {
+                                id: 'lines',
+                                type: 'patternLines',
+                                background: 'inherit',
+                                color: '#eed312',
+                                rotation: -45,
+                                lineWidth: 6,
+                                spacing: 10
+                            }
+                        ]}                        
+                        borderColor={{
+                            from: 'color',
+                            modifiers: [
+                                [
+                                    'darker',
+                                    1.6
+                                ]
+                            ]
+                        }}                        
+                        axisTop={null}
+                        axisRight={null}
+                        axisBottom={{
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: '총 도달 수 / 총 노출 수 / 총 인터렉션 수',
+                            legendPosition: 'middle',
+                            legendOffset: 32
+                        }}
+                        axisLeft={{
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: '',
+                            legendPosition: 'middle',
+                            legendOffset: -40
+                        }}
+                        labelSkipWidth={12}
+                        labelSkipHeight={12}
+                        labelTextColor={{
+                            from: 'color',
+                            modifiers: [
+                                [
+                                    'darker',
+                                    1.6
+                                ]
+                            ]
+                        }}
+                        legends={[
+                            {
+                                dataFrom: 'keys',
+                                anchor: 'bottom-right',
+                                direction: 'column',
+                                justify: false,
+                                translateX: 120,
+                                translateY: 0,
+                                itemsSpacing: 2,
+                                itemWidth: 100,
+                                itemHeight: 20,
+                                itemDirection: 'left-to-right',
+                                itemOpacity: 0.85,
+                                symbolSize: 20,
+                                effects: [
+                                    {
+                                        on: 'hover',
+                                        style: {
+                                            itemOpacity: 1
+                                        }
+                                    }
+                                ]
+                            }
+                        ]}
+                        role="application"
+                        ariaLabel="Nivo bar chart demo"
+                        barAriaLabel={function(e){return e.id+": "+e.formattedValue+" in country: "+e.indexValue}}
+                    />
+                </div>
             </div>
         </CampaignReportCSS>
     )
@@ -369,6 +500,9 @@ const CampaignReportCSS = styled.div`
     }
     .report-container:nth-child(5) {
         grid-column : 1 / 4;
+        .report-graph-container {
+            height : 400px;
+        }
     }
 `
 
