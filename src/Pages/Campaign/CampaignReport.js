@@ -75,7 +75,7 @@ const CampaignReport = () => {
                                         console.log(json1.data);
                                         
                                         const json2 = await axios.get(
-                                            `https://graph.facebook.com/v14.0/${postIdArray[i]}?fields=media_type,comments_count,like_count&access_token=${userTokenArray[i]}`
+                                            `https://graph.facebook.com/v14.0/${postIdArray[i]}?fields=media_type,comments_count,like_count,media_url&access_token=${userTokenArray[i]}`
                                         );                                                                                                                                            
                                         console.log(json2.data);                            
                                                                             
@@ -455,10 +455,12 @@ const CampaignReportCSS = styled.div`
             .report-best-box {
                 display : flex;
                 flex-direction : column;
+                border : 1px solid #dcdcdc;
+                border-radius : 6px;
                 .report-best-image {
                     width : 180px;
                     height : 180px;
-                    border-radius : 50%;
+                    border-radius : 6px;
                 }
                 .user-instagram-logo-name {                                        
                     display : flex;
