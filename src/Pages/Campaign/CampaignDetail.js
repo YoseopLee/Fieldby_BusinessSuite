@@ -1,6 +1,9 @@
+import { upload } from "@testing-library/user-event/dist/upload";
 import { child, get, getDatabase, ref } from "firebase/database";
+import moment, { now } from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useInterval } from "react-use";
 import styled from "styled-components";
 import CompleteModal from "../../Components/Modal/CompleteModal";
 import ReportModal from "../../Components/Modal/ReportModal";
@@ -24,6 +27,7 @@ const CampaignDetail = () => {
     const [reportBtn, setReportBtn] = useState(false);
     const [completeModalOpen, setCompleteModalOpen] = useState(false);
     const [reportModalOpen, setReportModalOpen] = useState(false);
+    const [seconds, setSeconds] = useState(Date.now());
     const navigate = useNavigate();
     let {id} = useParams();
 
@@ -54,7 +58,7 @@ const CampaignDetail = () => {
     }, []);
 
     const location = useLocation();        
-    useEffect(() => {        
+    useEffect(() => { 
         console.log(location);        
         const progressPath = location.pathname === `/campaign/${id}/progress`;        
         const resultPath = location.pathname === `/campaign/${id}/result`;
@@ -90,7 +94,6 @@ const CampaignDetail = () => {
 
     const closeCompleteModal = () => {
         setCompleteModalOpen(false);
-        navigate(-1);
     }
 
     const openReportModal = () => {
@@ -100,6 +103,45 @@ const CampaignDetail = () => {
     const closeReportModal = () => {
         setReportModalOpen(false);
         
+    }
+    
+    const campaignCompleteActive = () => {
+        const timeNow = moment().format("YYYY-MM-DD");
+        const timeNowYear = moment().format("YYYY");
+        const timeNowMonth = moment().format("MM");
+        const timeNowDay = moment().format("DD");
+        const itemYear = itemDate.slice(0, 4);
+        const itemMonth = itemDate.slice(5, 7);
+        const itemDay = itemDate.slice(8, 10);
+
+        const today = new Date(timeNowYear, timeNowMonth, timeNowDay);
+        const item_date = new Date(itemYear, itemMonth, itemDay);
+            
+        if (today - item_date >= 0) {
+            navigate(`/campaign/${id}/complete`);
+        } else {
+            openCompleteModal();
+        }
+    }
+
+    const campaignReportActive = () => {        
+        const timeNow = moment().format("YYYY-MM-DD");
+        const timeNowYear = moment().format("YYYY");
+        const timeNowMonth = moment().format("MM");
+        const timeNowDay = moment().format("DD");
+        const uploadYear = uploadDate.slice(0, 4);
+        const uploadMonth = uploadDate.slice(5, 7);
+        const uploadDay = uploadDate.slice(8, 10);
+        
+        const today = new Date(timeNowYear, timeNowMonth, timeNowDay);
+        const upload_date = new Date(uploadYear, uploadMonth, uploadDay);
+        console.log(today - upload_date);
+        
+        if (today - upload_date >= 0) {
+            navigate(`/campaign/${id}/report`);
+        } else {
+            openReportModal();
+        }
     }
     
     return (
@@ -170,8 +212,9 @@ const CampaignDetail = () => {
                         
                         <Link className={`campaign-register-progress ${progressBtn ? 'active' : 'no'}`} id="progress" to='progress'>신청 현황</Link>
                         <Link className={`campaign-register-result ${resultBtn ? 'active' : 'no'}`} to='result'>선정 결과</Link>
-                        <Link className={`campaign-complete-posts ${completeBtn ? 'active' : 'no'}`} to='complete'>완료 포스팅</Link>
-                        <div className={`campaign-report ${reportBtn ? 'active' : 'no'}`} onClick={openReportModal}>캠페인 보고서</div>
+                        <div className={`campaign-complete-posts ${completeBtn ? 'active' : 'no'}`} onClick={campaignCompleteActive}>완료 포스팅</div>
+                        <div className={`campaign-report ${reportBtn ? 'active' : 'no'}`} onClick={campaignReportActive}>캠페인 보고서</div>                        
+                        
                     </div>
                     <Outlet />
                 </div>

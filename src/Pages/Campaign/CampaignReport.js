@@ -1,6 +1,7 @@
 import { ResponsiveBar } from "@nivo/bar";
 import axios from "axios";
 import { child, get, getDatabase, ref } from "firebase/database";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -159,6 +160,8 @@ const CampaignReport = () => {
             const time = today.getHours();
             console.log(today);
             setDay(`${month} / ${day}, ${time}:00`);
+            
+            
         }
         getToday();
     }, [])
