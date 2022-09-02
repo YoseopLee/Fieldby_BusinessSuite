@@ -7,8 +7,13 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
     const [reaches, setReaches] = useState(0);
     const [engagements, setEngagements] = useState(0);
     const [mediaUrl, setMediaUrl] = useState('');
+    const [mediaType, setMediaType] = useState('');
+    const [thumnail, setPostThumbnail] = useState('');
+    const [mediaLink, setMediaLink] = useState('');
 
     useEffect(() => {
+        console.log(userPostId);
+        console.log(userToken);
         const getPostData = async() => {
             try {
                 const json1 = await axios.get(
@@ -24,13 +29,19 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
                 setEngagements(engagement);
 
                 const json2 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${userPostId}?fields=media_url,media_type&access_token=${userToken}`
+                    `https://graph.facebook.com/v14.0/${userPostId}?fields=media_url,media_type,thumbnail_url,permalink&access_token=${userToken}`
                 );
                 console.log(json2.data);
                             
                 const media_url = json2.data.media_url;
                 console.log(media_url);
                 setMediaUrl(media_url);
+                const media_type = json2.data.media_type;
+                setMediaType(media_type);
+                const thumbnail_url = json2.data.thumbnail_url;
+                setPostThumbnail(thumbnail_url);
+                const perma_link = json2.data.permalink;
+                setMediaLink(perma_link);
                                 
             } catch (error) {
                 console.log(error);
@@ -43,24 +54,35 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
         <CampaignReportTop3CSS>
             {mediaUrl ? (
                 <div className="report-best-box">
-                    <a href={mediaUrl} target="_blank">
-                        <img src={mediaUrl} alt="best-img" className="report-best-image"/>
-                    </a>                            
-                    <div className="user-instagram-logo-name">
-                        <a href={`https://www.instagram.com/${username}`} className="instagram-link" target="_blank">
-                            <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
-                            <span className="user-instagram-name">{username}</span>
-                        </a>                                
-                    </div>
-                    <div className="report-user-info-box">                                
-                        <span className="report-user-info">노출 {impressions}</span>
-                        <span className="report-user-info">도달 {reaches}</span>
-                        <span className="report-user-info">좋아요+댓글 {engagements}</span>                                                            
-                    </div>
+                    {mediaType === 'VIDEO' ? (
+                        <a href={mediaLink} target="_blank">
+                            {mediaUrl === undefined ? (
+                                <img src={thumnail} alt="posted" className="report-best-image"/>
+                            ) : (
+                                <video autoPlay loop src={mediaUrl} className="report-best-image"/>
+                            )}                                                                        
+                        </a> 
+                    ) : (
+                        <a href={mediaLink} target="_blank">
+                            <img src={mediaUrl} alt="best-img" className="report-best-image"/>
+                        </a>
+                    )}
+                                           
+                <div className="user-instagram-logo-name">
+                    <a href={`https://www.instagram.com/${username}`} className="instagram-link" target="_blank">
+                        <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
+                        <span className="user-instagram-name">{username}</span>
+                    </a>                                
                 </div>
-            ) : (                                
+                <div className="report-user-info-box">                                
+                    <span className="report-user-info">노출 {impressions}</span>
+                    <span className="report-user-info">도달 {reaches}</span>
+                    <span className="report-user-info">좋아요+댓글 {engagements}</span>                                                            
+                </div>
+            </div>
+            ) : (
                 null
-            )}
+            )}                                                                                   
             
         </CampaignReportTop3CSS>
     )

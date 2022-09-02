@@ -20,30 +20,46 @@ const CampaignReport = () => {
     const [campaignAvgEngagement, setCampaignAvgEngagement] = useState(0);
     const [campaignSaved, setCampaignSaved] = useState(0);
     const [campaignLikes, setCampaignLikes] = useState(0);
+    const [campaignAvgLikes, setCampaignAvgLikes] = useState(0);
     const [campaignComments, setCampaignComments] = useState(0);
-    const [sumFollowers, setSumFollowers] = useState(0);    
+    const [campaignAvgComments, setCampaignAvgComments] = useState(0);
+    const [sumFollowers, setSumFollowers] = useState(0);
+    const [campaignPrice, setCampaignPrice] = useState(0);    
     const [day, setDay] = useState('');
     const followerArray = [];
     const userArray = [];
     const userTokenArray = [];
     const postIdArray = [];
+    const postIdArray2 = [];
     const reachArray = [];
     const likesArray = [];
+    const commentsArray = [];
     const engagementArray = [];
     const impressionArray = [];
-
-    
 
     useEffect(() => {
         const dbRef = ref(getDatabase());
         const getCompleteData = async() => {
+            const json1 = await get(child(dbRef, `brands/${currentUser.uid}/campaigns/${id}`))
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    const dataObj = snapshot.val();
+                    console.log(dataObj);
+                    setCampaignPrice(dataObj.campaignPrice);
+                } else {
+                    console.log("No Data");
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+
             const json = await get(child(dbRef, `brands/${currentUser.uid}/campaigns/${id}/selecteduser`))
             .then((snapshot) => {
                 if (snapshot.exists()) {
-                    const dataObj = snapshot.val();                
-                    const data_ent = Object.entries(dataObj);                    
-                    const data_ent_arr = data_ent.map((d) => Object.assign(d[1]));                    
-                    
+                    const dataObj = snapshot.val();      
+                    const data_ent = Object.entries(dataObj);
+                    const data_ent_arr = data_ent.map((d) => Object.assign(d[1]));
+                    console.log(data_ent_arr.length);
                     for (let i = 0; i < data_ent_arr.length; i++) {
                         get(child(dbRef, `users/${data_ent_arr[i]}`))
                         .then((snapshot) => {
@@ -57,73 +73,84 @@ const CampaignReport = () => {
                                 console.log(sum_followers);
                                 setUserDatas([...userArray]);
                                 setSumFollowers(sum_followers);                                                           
-                                const userSelectedData = userDataObj.campaigns?.[id].images?.[0];
+                                const userSelectedData = userDataObj.campaigns?.[id].images;
+                                const userSelectedData2 = userDataObj.campaigns?.[id].images?.[1];                                
                                 console.log(userSelectedData);
-                                postIdArray.push(userSelectedData);                                
+                                
+                                postIdArray.push(userSelectedData);                                                                                               
+                                postIdArray2.push(userSelectedData2);                                
                                 console.log(postIdArray);
+                                // console.log(postIdArray2);
+                                // const newPostIdArray = [...postIdArray, ...postIdArray2]
+                                // console.log(newPostIdArray);
+                            
+
                                 
                                 const userSelectedToken = userDataObj.igInfo?.token;                                
                                 console.log(userSelectedToken);
                                 userTokenArray.push(userSelectedToken);    
                                 console.log(userTokenArray);
                                 
-                                const getPostData = async() => {
-                                    try {                                                                                
-                                        const json1 = await axios.get(
-                                            // token에 권한이 없어서 불러오지 못함.
-                                            `https://graph.facebook.com/v14.0/${postIdArray[i]}/insights?metric=reach,impressions,engagement,saved&access_token=${userTokenArray[i]}`
-                                        );
-                                        console.log(json1.data);
-                                        
-                                        const json2 = await axios.get(
-                                            `https://graph.facebook.com/v14.0/${postIdArray[i]}?fields=media_type,comments_count,like_count,media_url&access_token=${userTokenArray[i]}`
-                                        );                                                                                                                                            
-                                        console.log(json2.data);                            
-                                                                            
-                                        const reach = json1.data.data[0].values[0].value;
-                                        
-                                        reachArray.push(reach);
-                                        const sumReach = reachArray.reduce((a,b) => a + b, 0);
-                                        
-                                        setCampaignReach(sumReach);
-                                        const avgReach = Math.floor(sumReach / (i + 1));                                        
-                                        
-                                        setCampaignAvgReaches(avgReach);
+                                const getPostData = async() => {                                    
+                                    try {                                            
+                                        for (let j = 0; j < postIdArray.length; j++) {
+                                            const json1 = await axios.get(
+                                                // token에 권한이 없어서 불러오지 못함.
+                                                `https://graph.facebook.com/v14.0/${postIdArray[i][j]}/insights?metric=reach&access_token=${userTokenArray[i]}`
+                                            );
+                                            console.log(json1.data);
+    
+                                            const json2 = await axios.get(
+                                                `https://graph.facebook.com/v14.0/${postIdArray[i][j]}?fields=media_type,comments_count,like_count,media_url&access_token=${userTokenArray[i]}`
+                                            );                                                                                                                                            
+                                            console.log(json2.data);                            
+                                                                                
+                                            const reach = json1.data.data[0].values[0].value;
+                                            console.log(reach);
+                                            
+                                            reachArray.push(reach);
+                                            console.log(reachArray);
+                                            const sumReach = reachArray.reduce((a,b) => a + b, 0);
+                                            
+                                            setCampaignReach(sumReach);
+                                            const avgReach = Math.floor(sumReach / (j + 3));                                        
+                                            
+                                            setCampaignAvgReaches(avgReach);
+    
+                                            // const impressions = json1.data.data[1].values[0].value;
+                                            
+                                            // impressionArray.push(impressions);
+                                            // const sum_Impression = impressionArray.reduce((a,b) => a+b, 0);
+                                            // setCampaignImpressions(sum_Impression);
+                                            // const engagement = json1.data.data[2].values[0].value;                                                                                
+                                            // engagementArray.push(engagement);                                        
+                                            // const sum_engagementArray = engagementArray.reduce((a,b) => a+b, 0);
+                                            // setCampaignEngagement(sum_engagementArray);
+                                            // const avgEngagement = Math.floor(sum_engagementArray / (i + 1));
+                                            // setCampaignAvgEngagement(avgEngagement);                                        
+                                            // const saved = json1.data.data[3].values[0].value;                                        
+                                            // setCampaignSaved(saved);    
+                                            const likes = json2.data.like_count;
+                                            console.log(likes);                       
+                                                                                    
+                                            likesArray.push(likes);
+                                            console.log(likesArray);                                                                                    
+                                            const sum_likesArray = likesArray.reduce((a,b) => a + b, 0);                                    
+                                            setCampaignLikes(sum_likesArray);
+                                            const avg_likesArray = Math.floor(sum_likesArray / (j + 3));
+                                            setCampaignAvgLikes(avg_likesArray); 
 
-                                        const impressions = json1.data.data[1].values[0].value;
-                                        
-                                        impressionArray.push(impressions);
-                                        const sum_Impression = impressionArray.reduce((a,b) => a+b, 0);
-                                        setCampaignImpressions(sum_Impression);
-
-                                        const engagement = json1.data.data[2].values[0].value;                                                                                
-                                        engagementArray.push(engagement);
-                                        
-                                        const sum_engagementArray = engagementArray.reduce((a,b) => a+b, 0);
-                                        setCampaignEngagement(sum_engagementArray);
-                                        const avgEngagement = Math.floor(sum_engagementArray / (i + 1));
-                                        setCampaignAvgEngagement(avgEngagement);                                        
-
-                                        const saved = json1.data.data[3].values[0].value;
-                                        
-                                        setCampaignSaved(saved);    
-
-                                        const likes = json2.data.like_count;
-                                        
-                                        setCampaignLikes(likes);
-                                        
-                                        likesArray.push(likes);
-                                        
-                                        const sum_likesArray = likesArray.reduce((a,b) => a + b, 0);
-                                        
-
-                                        const comments = json2.data.comments_count;
-                                        
-                                        setCampaignComments(comments);
-
-                                        
-                                        
-
+                                            const comments = json2.data.comments_count; 
+                                            console.log(comments);                     
+                                            commentsArray.push(comments);
+                                            const sum_commentsArray = commentsArray.reduce((a,b) =>  a+b, 0);                  
+                                            setCampaignComments(sum_commentsArray);
+                                            const avg_commentsArray = Math.floor(sum_commentsArray / (j + 3));
+                                            setCampaignAvgComments(avg_commentsArray);
+                                        }                   
+                                            
+                                                                                                                     
+                                                                                                                                                                                                                                                                
                                     } catch (error) {
                                         console.log(error);
                                     }                                    
@@ -136,10 +163,7 @@ const CampaignReport = () => {
                         }).catch((error) => {
                             console.log(error);
                         })
-                    }
-
-                    
-                                        
+                    }                                                            
                 } else {
                     console.log("No data");
                 }
@@ -170,7 +194,7 @@ const CampaignReport = () => {
     const data = [
         {
           "country": '실시간 인사이트',
-          "총 인터렉션": campaignEngagement,
+          "총 인터렉션": campaignLikes + campaignComments,
           "총 인터렉션Color": "hsl(93, 70%, 50%)",
           "총 도달": campaignReachs,
           "총 도달Color": "hsl(106, 70%, 50%)",
@@ -192,9 +216,9 @@ const CampaignReport = () => {
             </div>
             <div className="report-container">
                 <span className="report-container-title">총 인터렉션 수</span>                
-                <span className="report-interaction-count">{campaignEngagement.toLocaleString('ko-KR')}</span>                                
+                <span className="report-interaction-count">{(campaignLikes + campaignComments).toLocaleString('ko-KR')}</span>                                
                 <span className="report-container-title">평균 인터렉션 수</span>
-                <span className="report-interaction-avg-count">{campaignAvgEngagement.toLocaleString('ko-KR')}</span>                                
+                <span className="report-interaction-avg-count">{(campaignAvgLikes + campaignAvgComments).toLocaleString('ko-KR')}</span>                                
                 <span className="report-container-text">*인터렉션은 댓글과 좋아요, 저장됨을 모두 합친 수 입니다.</span>
             </div>
             <div className="report-container">
@@ -203,7 +227,7 @@ const CampaignReport = () => {
                 <span className="report-container-text">*캠페인 진행 인플루언서의 도합 팔로워 수 입니다.</span>                
                 <div className="report-line"/>
                 <span className="report-container-title">도달 당 비용</span>
-                <span className="report-followers">{Math.floor(1000000/campaignReachs).toLocaleString('ko-KR')}원</span>
+                <span className="report-followers">{(campaignPrice/campaignReachs).toFixed(1)}원</span>
                 <span className="report-container-text2">*도달은 콘텐츠를 본사람의 숫자로 여러번 노출되어도 1번의 도달로 계산합니다.</span>
             </div>
 
