@@ -30,6 +30,28 @@ const CampaignDetail = () => {
     const [seconds, setSeconds] = useState(Date.now());
     const navigate = useNavigate();
     let {id} = useParams();
+    
+    const timeNowYear = moment().format("YYYY");
+    const timeNowMonth = moment().format("MM");
+    const timeNowDay = moment().format("DD");
+
+    const selectionYear = selectionDate.slice(0, 4);
+    const selectionMonth = selectionDate.slice(5, 7);
+    const selectionDay = selectionDate.slice(8, 10);
+    const selection_date = new Date(selectionYear, selectionMonth, selectionDay);
+
+    const itemYear = itemDate.slice(0, 4);
+    const itemMonth = itemDate.slice(5, 7);
+    const itemDay = itemDate.slice(8, 10);
+    const item_date = new Date(itemYear, itemMonth, itemDay);
+
+    const uploadYear = uploadDate.slice(0, 4);
+    const uploadMonth = uploadDate.slice(5, 7);
+    const uploadDay = uploadDate.slice(8, 10);
+    const upload_date = new Date(uploadYear, uploadMonth, uploadDay);
+
+    const today = new Date(timeNowYear, timeNowMonth, timeNowDay);
+
 
     useEffect(() => {
         const dbBrandRef = ref(getDatabase());
@@ -116,6 +138,7 @@ const CampaignDetail = () => {
 
         const today = new Date(timeNowYear, timeNowMonth, timeNowDay);
         const item_date = new Date(itemYear, itemMonth, itemDay);
+        console.log(today - item_date);
             
         if (today - item_date >= 0) {
             navigate(`/campaign/${id}/complete`);
@@ -132,7 +155,6 @@ const CampaignDetail = () => {
         const uploadYear = uploadDate.slice(0, 4);
         const uploadMonth = uploadDate.slice(5, 7);
         const uploadDay = uploadDate.slice(8, 10);
-        
         const today = new Date(timeNowYear, timeNowMonth, timeNowDay);
         const upload_date = new Date(uploadYear, uploadMonth, uploadDay);
         console.log(today - upload_date);
@@ -185,21 +207,24 @@ const CampaignDetail = () => {
                                     <span className="campaign-status-date">{recruitingDate.replace(/-/gi, '.')} - {dueDate.slice(0, 10).replace(/-/gi, '.')}</span>
                                 </div>
                                 <div className="campaign-timeline-status">
-                                    <img src="/images/Group 65.png" className="campaign-status-sign" alt="sign"/>
+                                    {today - selection_date >= 0 ? ( <img src="/images/Group 65.png" className="campaign-status-sign" alt="sign"/> ) : (null) }
                                     <span>크리에이터 선정</span>
                                     <span className="campaign-status-date">{selectionDate.slice(0, 10).replace(/-/gi, '.')} - {selectionDate.slice(0, 10).replace(/-/gi, '.')}</span>
                                 </div>
                                 <div className="campaign-timeline-status">
-                                    <img src="/images/Group 65.png" className="campaign-status-sign" alt="sign"/>
+                                    {today - selection_date >= 0 ? (<img src="/images/Group 65.png" className="campaign-status-sign" alt="sign"/>) : (null)} 
                                     <span>크리에이터 발표</span>
                                     <span className="campaign-status-date">{selectionDate.slice(0, 10).replace(/-/gi, '.')} - {selectionDate.slice(0, 10).replace(/-/gi, '.')}</span>
                                 </div>
                                 <div className="campaign-timeline-status">                                    
-                                    <span className="campaign-status-info">콘텐츠 등록 기간</span>
+                                    {today - item_date >= 0 ?
+                                        (<img src="/images/Group 65.png" className="campaign-status-sign" alt="sign"/>) : (null)} 
+                                    <span>콘텐츠 등록 기간</span>
                                     <span className="campaign-status-date">{itemDate.slice(0,10).replace(/-/gi,'.')} - {uploadDate.slice(0,10).replace(/-/gi, '.')}</span>
                                 </div>
                                 <div className="campaign-timeline-status">                                    
-                                    <span className="campaign-status-info">보고서 확인</span>
+                                    {today - upload_date >= 0 ? (<img src="/images/Group 65.png" className="campaign-status-sign" alt="sign"/>) : (null)} 
+                                    <span>보고서 확인</span>
                                     <span className="campaign-status-date">{uploadDate.slice(0,10).replace(/-/gi, '.')} ~</span>
                                 </div>
                             </div>

@@ -81,44 +81,44 @@ const CampaignReport = () => {
                                         console.log(json2.data);                            
                                                                             
                                         const reach = json1.data.data[0].values[0].value;
-                                        console.log(reach);
+                                        
                                         reachArray.push(reach);
                                         const sumReach = reachArray.reduce((a,b) => a + b, 0);
-                                        console.log(sumReach);
+                                        
                                         setCampaignReach(sumReach);
                                         const avgReach = Math.floor(sumReach / (i + 1));                                        
-                                        console.log(avgReach);
+                                        
                                         setCampaignAvgReaches(avgReach);
 
                                         const impressions = json1.data.data[1].values[0].value;
-                                        console.log(impressions);
+                                        
                                         impressionArray.push(impressions);
                                         const sum_Impression = impressionArray.reduce((a,b) => a+b, 0);
                                         setCampaignImpressions(sum_Impression);
 
                                         const engagement = json1.data.data[2].values[0].value;                                                                                
                                         engagementArray.push(engagement);
-                                        console.log(engagementArray);
+                                        
                                         const sum_engagementArray = engagementArray.reduce((a,b) => a+b, 0);
                                         setCampaignEngagement(sum_engagementArray);
                                         const avgEngagement = Math.floor(sum_engagementArray / (i + 1));
                                         setCampaignAvgEngagement(avgEngagement);                                        
 
                                         const saved = json1.data.data[3].values[0].value;
-                                        console.log(saved);
+                                        
                                         setCampaignSaved(saved);    
 
                                         const likes = json2.data.like_count;
-                                        console.log(json2.data.like_count);
+                                        
                                         setCampaignLikes(likes);
                                         
                                         likesArray.push(likes);
-                                        console.log(likesArray);
+                                        
                                         const sum_likesArray = likesArray.reduce((a,b) => a + b, 0);
-                                        console.log(sum_likesArray);
+                                        
 
                                         const comments = json2.data.comments_count;
-                                        console.log(json2.data.comments_count);
+                                        
                                         setCampaignComments(comments);
 
                                         
@@ -217,7 +217,7 @@ const CampaignReport = () => {
                         key={idx}
                         profileUrl={userData.igInfo?.profileUrl}
                         username={userData.igInfo?.username}                            
-                        userPostId={userData.campaigns?.[id].images?.[0]}
+                        userPostId={userData.campaigns?.[id]?.images?.[0]}
                         userToken={userData.igInfo?.token}
                     />                                                                                 
                 )}                                                                                                          

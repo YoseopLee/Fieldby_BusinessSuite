@@ -16,19 +16,20 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
                 );
                 console.log(json1.data);
 
-                const json2 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${userPostId}?fields=media_url&access_token=${userToken}`
-                );
-                console.log(json2.data);
-
                 const reach = json1.data.data[0].values[0].value;
                 setReaches(reach);
                 const impression = json1.data.data[1].values[0].value;
                 setImpressions(impression);
                 const engagement = json1.data.data[2].values[0].value;
                 setEngagements(engagement);
-                
+
+                const json2 = await axios.get(
+                    `https://graph.facebook.com/v14.0/${userPostId}?fields=media_url,media_type&access_token=${userToken}`
+                );
+                console.log(json2.data);
+                            
                 const media_url = json2.data.media_url;
+                console.log(media_url);
                 setMediaUrl(media_url);
                                 
             } catch (error) {
