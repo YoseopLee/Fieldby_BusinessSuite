@@ -74,7 +74,7 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl, postIma
 
     return (        
         <>
-        {postImage ? (
+        {postImage || postImage2 || postThumbnail || postImageUrl2 ? (
             <CampaignCompleteDetailCSS>
             {loading ? (
                 <div className="spinner-cm">
