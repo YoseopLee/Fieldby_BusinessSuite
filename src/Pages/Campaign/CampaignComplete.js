@@ -12,6 +12,7 @@ const CampaignComplete = () => {
     const {id} = useParams();
     const [userDatas, setUserDatas] = useState([]);
     const [userPostDatas, setUserPostDatas] = useState([]);    
+    const userPostArray = [];
 
     useEffect(() => {
         const dbRef = ref(getDatabase());
@@ -33,10 +34,14 @@ const CampaignComplete = () => {
                                 const userDataObj = snapshot.val();
                                 console.log(userDataObj);
                                 userArray.push(userDataObj);
-                                console.log(userArray);
+                                console.log(userArray);                            
                                 setUserDatas([...userArray]);                                
                                 const userSelectedData = userDataObj.campaigns;
-                                const userPost = userArray?.[0].campaigns?.[id]?.images?.[0];                                
+                                const userPost = userDataObj.campaigns?.[id].images?.[0];
+                                userPostArray.push(userPost);
+                                console.log(userPostArray);
+                                
+                                console.log(userPostArray);
                                 setUserPostDatas(userPost);
                                 console.log(userSelectedData);                                                          
                             } else {
@@ -58,7 +63,7 @@ const CampaignComplete = () => {
 
     return (
         <CampaignCompleteCSS>
-            {userPostDatas ? (
+            {userPostArray ? (
                 <>
                 <span className="campaign-complete-title">완료 포스팅</span>            
                 <div className="campaign-complete-posts-wrapper">
@@ -69,6 +74,7 @@ const CampaignComplete = () => {
                             followers={userData.igInfo?.followers}
                             token={userData.igInfo?.token}
                             postImageUrl={userData.campaigns?.[id]?.images?.[0]}
+                            postImageUrl2={userData.campaigns?.[id]?.images?.[1]}                            
                         />
                     )}
                 </div>

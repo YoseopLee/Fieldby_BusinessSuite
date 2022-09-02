@@ -3,20 +3,29 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Spinner from "../../Components/Common/Spinner";
 
-const CampaignCompleteDetail = ({igname, followers, token, postImageUrl}) => {
+const CampaignCompleteDetail = ({igname, followers, token, postImageUrl, postImageUrl2}) => {
 
     const [postImage, setPostImage] = useState('');
+    const [postImage2, setPostImage2] = useState('');
     const [postComments, setPostComments] = useState('');
+    const [postComments2, setPostComments2] = useState('');
     const [postLikes, setPostLikes] = useState('');
+    const [postLikes2, setPostLikes2] = useState('');
     const [postType, setPostType] = useState('');
+    const [postType2, setPostType2] = useState('');
+    const [postThumbnail, setPostThumbnail] = useState('');
+    const [postThumbnail2, setPostThumbnail2] = useState('');
+    const [postLink, setPostLink] = useState('');
+    const [postLink2, setPostLink2] = useState('');
     const [loading, setLoading] = useState(true);
+    const userPostArray = [];
 
     useEffect(() => {
         const getPostDatas = async() => {
             try {
                 // post Data
                 const json1 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl}?fields=media_type,media_url&access_token=${token}`
+                    `https://graph.facebook.com/v14.0/${postImageUrl}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
                 );
 
                 const json2 = await axios.get(
@@ -26,12 +35,35 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl}) => {
                 const json3 = await axios.get(
                     `https://graph.facebook.com/v14.0/${postImageUrl}?fields=like_count&access_token=${token}`
                 );
+
+                const json4 = await axios.get(
+                    `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
+                )
+
+                const json5 = await axios.get(
+                    `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=comments_count&access_token=${token}`
+                );
+
+                const json6 = await axios.get(
+                    `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=like_count&access_token=${token}`
+                );
                 console.log(json1.data);
+                console.log(json4.data);
                 setLoading(false);
                 setPostImage(json1.data.media_url);
-                setPostType(json1.data.media_type);
+                setPostType(json1.data.media_type);                
+                setPostThumbnail(json1.data.thumbnail_url);
+                setPostLink(json1.data.permalink);
                 setPostComments(json2.data.comments_count);
                 setPostLikes(json3.data.like_count);
+
+                setPostImage2(json4.data.media_url);
+                setPostType2(json4.data.media_type);
+                setPostThumbnail2(json4.data.thumbnail_url);
+                setPostLink2(json4.data.permalink);
+                setPostComments2(json5.data.comments_count);
+                setPostLikes2(json6.data.like_count);
+
             } catch (error) {
                 console.log(error);
                 setLoading(false);
@@ -42,26 +74,26 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl}) => {
 
     return (        
         <CampaignCompleteDetailCSS>
-            {postImageUrl ? (
+            {postImage || postThumbnail || postImage2 || postThumbnail2 ? (
                 <>
-                {loading ? (
-                    <div className="spinner-cm">
-                        <Spinner />
-                    </div>
-                ) : (
                     <div className="campaign-complete-details">
                         <div className="camapaign-complete-detail-info-wrapper">
-                            {postType === 'VIDEO' ? (
-                                <a href={postImage} target="_blank">
-                                    <video src={postImage} alt="posted" className="campaign-complete-detail-img"/>
-                                </a>
-                                
+                            {postType === 'VIDEO' ? (                                
+                                <a href={postLink} target="_blank">
+                                    {postImage === undefined ? (
+                                        <img src={postThumbnail} alt="posted" className="campaign-complete-detail-img"/>    
+                                    ) : (
+                                        <video autoPlay src={postImage} alt="posted" className="campaign-complete-detail-img"/>
+                                    )}
+                                    
+                                </a>                                                            
                             ) : 
-                            (   
-                                <a href={postImage} target="_blank">
+                            (                                   
+                                <a href={postLink} target="_blank">
                                     <img src={postImage} alt="posted" className="campaign-complete-detail-img"/>
+                                    
                                 </a>
-                                
+                                                                                              
                             )}  
                         </div>
 
@@ -78,10 +110,81 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl}) => {
                             <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
                         </div>                                                                                                        
                     </div>
-                )}
-                </>
+                    
+                    <div className="campaign-complete-details">
+                        <div className="camapaign-complete-detail-info-wrapper">
+                            {postType2 === 'VIDEO' ? (                                
+                                <a href={postLink2} target="_blank">
+                                    {postImage2 === undefined ? (
+                                        <img src={postThumbnail2} alt="posted" className="campaign-complete-detail-img"/>    
+                                    ) : (
+                                        <video autoPlay src={postImage2} alt="posted" className="campaign-complete-detail-img"/>
+                                    )}
+                                    
+                                </a>                                                            
+                            ) : 
+                            (                                   
+                                <a href={postLink2} target="_blank">
+                                    <img src={postImage2} alt="posted" className="campaign-complete-detail-img"/>                                    
+                                </a>
+                                                                                              
+                            )}  
+                        </div>
+
+                        <div className="user-instagram-logo-name">
+                            <a href={`https://www.instagram.com/${igname}`} className="instagram-link" target="_blank">
+                                <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
+                                <span className="user-instagram-name">{igname}</span>
+                            </a>
+                        </div>
+
+                        <div className="campaign-complete-detail-user-info">
+                            <span className="camapaign-complete-detail-likes">좋아요 &nbsp;{postLikes}</span>                                                
+                            <span className="camapaign-complete-detail-comments">댓글 &nbsp;{postComments}</span>
+                            <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
+                        </div>                                                                                                        
+                    </div>
+                    </>                
             ) : (
-                null
+                <>
+                <div className="campaign-complete-details">
+                        <div className="camapaign-complete-detail-info-wrapper">
+                            <span>아직 크리에이터가 포스팅하지 않았습니다.</span>  
+                        </div>
+
+                        <div className="user-instagram-logo-name">
+                            <a href={`https://www.instagram.com/${igname}`} className="instagram-link" target="_blank">
+                                <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
+                                <span className="user-instagram-name">{igname}</span>
+                            </a>
+                        </div>
+
+                        <div className="campaign-complete-detail-user-info">
+                            <span className="camapaign-complete-detail-likes">좋아요 &nbsp;{postLikes}</span>                                                
+                            <span className="camapaign-complete-detail-comments">댓글 &nbsp;{postComments}</span>
+                            <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
+                        </div>                                                                                                        
+                    </div>
+
+                <div className="campaign-complete-details">
+                        <div className="camapaign-complete-detail-info-wrapper">
+                            <span>아직 크리에이터가 포스팅하지 않았습니다.</span>  
+                        </div>
+
+                        <div className="user-instagram-logo-name">
+                            <a href={`https://www.instagram.com/${igname}`} className="instagram-link" target="_blank">
+                                <img className="instagram-logo" src="/images/image 120.png" alt="instagram" />
+                                <span className="user-instagram-name">{igname}</span>
+                            </a>
+                        </div>
+
+                        <div className="campaign-complete-detail-user-info">
+                            <span className="camapaign-complete-detail-likes">좋아요 &nbsp;{postLikes}</span>                                                
+                            <span className="camapaign-complete-detail-comments">댓글 &nbsp;{postComments}</span>
+                            <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
+                        </div>                                                                                                        
+                    </div>
+                </>
             )}                        
         </CampaignCompleteDetailCSS>
     )
@@ -93,10 +196,17 @@ const CampaignCompleteDetailCSS = styled.div`
     }
 
     .campaign-complete-details {
-        .camapaign-complete-detail-info-wrapper {
+        .camapaign-complete-detail-info-wrapper {            
+            position : relative;
+            overflow : hidden;
+            height : 350px;
             .campaign-complete-detail-img {
-                width : 100%;
-                height : 100%;
+                position: absolute;
+                width: 100%;
+                /* height: 100%; */
+                top: 50%; 
+                left: 50%;
+                transform: translate(-50%, -50%);   
             }
         }
         .user-instagram-logo-name {                    
