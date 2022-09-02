@@ -65,18 +65,18 @@ const CampaignComplete = () => {
         <CampaignCompleteCSS>
             {userPostArray ? (
                 <>
-                <span className="campaign-complete-title">완료 포스팅</span>            
+                <span className="campaign-complete-title">완료 포스팅</span> 
                 <div className="campaign-complete-posts-wrapper">
                     {userDatas.map((userData, idx) =>
-                        <CampaignCompleteDetail 
-                            key={idx}
-                            igname={userData.igInfo?.username}
-                            followers={userData.igInfo?.followers}
-                            token={userData.igInfo?.token}
-                            postImageUrl={userData.campaigns?.[id]?.images?.[0]}
-                            postImageUrl2={userData.campaigns?.[id]?.images?.[1]}                            
-                        />
-                    )}
+                            <CampaignCompleteDetail  
+                                key={idx}
+                                igname={userData.igInfo?.username}
+                                followers={userData.igInfo?.followers}
+                                token={userData.igInfo?.token}
+                                postImageUrl={userData.campaigns?.[id]?.images?.[0]}
+                                postImageUrl2={userData.campaigns?.[id]?.images?.[1]}                            
+                            />
+                    )} 
                 </div>
                 </>
             ) : (
@@ -84,10 +84,7 @@ const CampaignComplete = () => {
                     <img src="/images/campaign-empty.png" alt="no-campaign"/> 
                     <span>아직 포스트를 등록한 인플루언서가 없습니다.</span>                    
                 </div>
-            )}            
-                    
-                
-           
+            )}                                                       
         </CampaignCompleteCSS>
     )
 }

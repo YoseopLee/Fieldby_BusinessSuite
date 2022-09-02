@@ -43,7 +43,7 @@ const CampaignReport = () => {
                     const dataObj = snapshot.val();                
                     const data_ent = Object.entries(dataObj);                    
                     const data_ent_arr = data_ent.map((d) => Object.assign(d[1]));                    
-                    
+                    console.log(data_ent_arr.length);
                     for (let i = 0; i < data_ent_arr.length; i++) {
                         get(child(dbRef, `users/${data_ent_arr[i]}`))
                         .then((snapshot) => {
@@ -74,15 +74,17 @@ const CampaignReport = () => {
                                             `https://graph.facebook.com/v14.0/${postIdArray[i]}/insights?metric=reach,impressions,engagement,saved&access_token=${userTokenArray[i]}`
                                         );
                                         console.log(json1.data);
-                                        
+
                                         const json2 = await axios.get(
                                             `https://graph.facebook.com/v14.0/${postIdArray[i]}?fields=media_type,comments_count,like_count,media_url&access_token=${userTokenArray[i]}`
                                         );                                                                                                                                            
                                         console.log(json2.data);                            
                                                                             
                                         const reach = json1.data.data[0].values[0].value;
+                                        console.log(reach);
                                         
                                         reachArray.push(reach);
+                                        console.log(reachArray);
                                         const sumReach = reachArray.reduce((a,b) => a + b, 0);
                                         
                                         setCampaignReach(sumReach);
@@ -95,35 +97,22 @@ const CampaignReport = () => {
                                         impressionArray.push(impressions);
                                         const sum_Impression = impressionArray.reduce((a,b) => a+b, 0);
                                         setCampaignImpressions(sum_Impression);
-
                                         const engagement = json1.data.data[2].values[0].value;                                                                                
-                                        engagementArray.push(engagement);
-                                        
+                                        engagementArray.push(engagement);                                        
                                         const sum_engagementArray = engagementArray.reduce((a,b) => a+b, 0);
                                         setCampaignEngagement(sum_engagementArray);
                                         const avgEngagement = Math.floor(sum_engagementArray / (i + 1));
                                         setCampaignAvgEngagement(avgEngagement);                                        
-
-                                        const saved = json1.data.data[3].values[0].value;
-                                        
+                                        const saved = json1.data.data[3].values[0].value;                                        
                                         setCampaignSaved(saved);    
-
-                                        const likes = json2.data.like_count;
-                                        
-                                        setCampaignLikes(likes);
-                                        
+                                        const likes = json2.data.like_count;                                        
+                                        setCampaignLikes(likes);                                        
                                         likesArray.push(likes);
                                         
-                                        const sum_likesArray = likesArray.reduce((a,b) => a + b, 0);
-                                        
-
-                                        const comments = json2.data.comments_count;
-                                        
+                                        const sum_likesArray = likesArray.reduce((a,b) => a + b, 0);                                    
+                                        const comments = json2.data.comments_count;                                        
                                         setCampaignComments(comments);
-
-                                        
-                                        
-
+                                                                                
                                     } catch (error) {
                                         console.log(error);
                                     }                                    
@@ -210,7 +199,7 @@ const CampaignReport = () => {
             
             <div className="report-container">
                 <span className="report-container-title">BEST 포스팅 TOP 3</span>
-                
+                ₩
                 <div className="report-best-wrapper">                    
                 {userDatas.map((userData, idx) =>    
                     <CampaignReportTop3 
