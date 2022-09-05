@@ -12,32 +12,45 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
     const [mediaLink, setMediaLink] = useState('');
 
     useEffect(() => {
-        console.log(userPostId);
-        console.log(userToken);
+                
         const getPostData = async() => {
-            try {
-                const json1 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${userPostId}/insights?metric=reach,impressions,engagement&access_token=${userToken}`
-                );
-                console.log(json1.data);
-
-                const reach = json1.data.data[0].values[0].value;
-                setReaches(reach);
-                const impression = json1.data.data[1].values[0].value;
-                setImpressions(impression);
-                const engagement = json1.data.data[2].values[0].value;
-                setEngagements(engagement);
+            try {                
 
                 const json2 = await axios.get(
                     `https://graph.facebook.com/v14.0/${userPostId}?fields=media_url,media_type,thumbnail_url,permalink&access_token=${userToken}`
                 );
-                console.log(json2.data);
+                // console.log(json2.data);
                             
                 const media_url = json2.data.media_url;
-                console.log(media_url);
+                // console.log(media_url);
                 setMediaUrl(media_url);
                 const media_type = json2.data.media_type;
                 setMediaType(media_type);
+                if (media_type === 'VIDEO') {
+                    const json1 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${userPostId}/insights?metric=reach&access_token=${userToken}`
+                    );
+                    // console.log(json1.data);
+    
+                    const reach = json1.data.data[0].values[0].value;
+                    setReaches(reach);
+                    // const impression = json1.data.data[1].values[0].value;
+                    // setImpressions(impression);
+                    // const engagement = json1.data.data[2].values[0].value;
+                    // setEngagements(engagement);
+                } else {
+                    const json1 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${userPostId}/insights?metric=reach,impressions,engagement&access_token=${userToken}`
+                    );
+                    // console.log(json1.data);
+    
+                    const reach = json1.data.data[0].values[0].value;
+                    setReaches(reach);
+                    const impression = json1.data.data[1].values[0].value;
+                    setImpressions(impression);
+                    const engagement = json1.data.data[2].values[0].value;
+                    setEngagements(engagement);
+                }
                 const thumbnail_url = json2.data.thumbnail_url;
                 setPostThumbnail(thumbnail_url);
                 const perma_link = json2.data.permalink;
