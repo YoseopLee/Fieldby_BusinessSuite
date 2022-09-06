@@ -74,7 +74,7 @@ const CampaignComplete = () => {
                                 followers={userData.igInfo?.followers}
                                 token={userData.igInfo?.token}
                                 postImageUrl={userData.campaigns?.[id]?.images?.[0]}
-                                postImageUrl2={userData.campaigns?.[id]?.images?.[1]}                            
+                                postImageUrl2={userData.campaigns?.[id]?.images?.[1] ? userData.campaigns?.[id]?.images?.[1] : null}                            
                             />
                     )} 
                 </div>
