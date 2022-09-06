@@ -6,6 +6,7 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
     const [impressions, setImpressions] = useState(0);
     const [reaches, setReaches] = useState(0);
     const [engagements, setEngagements] = useState(0);
+    const [plays, setPlays] = useState(0);
     const [mediaUrl, setMediaUrl] = useState('');
     const [mediaType, setMediaType] = useState('');
     const [thumnail, setPostThumbnail] = useState('');
@@ -26,9 +27,15 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
                 setMediaUrl(media_url);
                 const media_type = json2.data.media_type;
                 setMediaType(media_type);
+
+                const thumbnail_url = json2.data.thumbnail_url;
+                setPostThumbnail(thumbnail_url);
+                const perma_link = json2.data.permalink;
+                setMediaLink(perma_link);
+                
                 if (media_type === 'VIDEO') {
                     const json1 = await axios.get(
-                        `https://graph.facebook.com/v14.0/${userPostId}/insights?metric=reach&access_token=${userToken}`
+                        `https://graph.facebook.com/v14.0/${userPostId}/insights?metric=reach,plays&access_token=${userToken}`
                     );
                     // console.log(json1.data);
     
@@ -38,6 +45,8 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
                     // setImpressions(impression);
                     // const engagement = json1.data.data[2].values[0].value;
                     // setEngagements(engagement);
+                    const play = json1.data.data[1].values[0].value;
+                    setPlays(play);
                 } else {
                     const json1 = await axios.get(
                         `https://graph.facebook.com/v14.0/${userPostId}/insights?metric=reach,impressions,engagement&access_token=${userToken}`
@@ -51,10 +60,7 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
                     const engagement = json1.data.data[2].values[0].value;
                     setEngagements(engagement);
                 }
-                const thumbnail_url = json2.data.thumbnail_url;
-                setPostThumbnail(thumbnail_url);
-                const perma_link = json2.data.permalink;
-                setMediaLink(perma_link);
+                
                                 
             } catch (error) {
                 console.log(error);
@@ -87,8 +93,12 @@ const CampaignReportTop3 = ({key, profileUrl, username, userPostId, userToken}) 
                         <span className="user-instagram-name">{username}</span>
                     </a>                                
                 </div>
-                <div className="report-user-info-box">                                
-                    <span className="report-user-info">노출 {impressions}</span>
+                <div className="report-user-info-box">
+                    {mediaType === 'VIDEO' ? (
+                        <span className="report-user-info">노출 {plays}</span>
+                    ) : (
+                        <span className="report-user-info">노출 {impressions}</span>
+                    )}                                                    
                     <span className="report-user-info">도달 {reaches}</span>
                     <span className="report-user-info">좋아요+댓글 {engagements}</span>                                                            
                 </div>

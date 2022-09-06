@@ -74,11 +74,8 @@ const CampaignReport = () => {
                                 setSumFollowers(sum_followers);                                                           
                                 const userSelectedData = userDataObj.campaigns?.[id].images;
                                 // const userSelectedData2 = userDataObj.campaigns?.[id].images?.[1];                                
-                                console.log(userSelectedData);
-                                
-                                
-                                postIdArray.push(userSelectedData);                                                                                               
-                                                                
+                                console.log(userSelectedData);                                                                
+                                postIdArray.push(userSelectedData);                                                                                                                                                               
                                 // postIdArray2.push(userSelectedData2);                                
                                 console.log(postIdArray);
                                 // console.log(postIdArray2);
@@ -92,8 +89,9 @@ const CampaignReport = () => {
                                 console.log(userTokenArray);
                                 
                                 const getPostData = async() => {                                    
-                                    try {                                            
-                                        for (let j = 0; j < postIdArray.length; j++) {                                                                                                                                          
+                                    try {
+                                        if (postIdArray) {
+                                            for (let j = 0; j < postIdArray.length; j++) {                                                                                                                                          
                                                 const json1 = await axios.get(
                                                     // token에 권한이 없어서 불러오지 못함.
                                                     `https://graph.facebook.com/v14.0/${postIdArray[i][j]}/insights?metric=reach&access_token=${userTokenArray[i]}`
@@ -144,12 +142,12 @@ const CampaignReport = () => {
                                                 setCampaignComments(sum_commentsArray);
                                                 const avg_commentsArray = Math.floor(sum_commentsArray / (j + 3));
                                                 setCampaignAvgComments(avg_commentsArray);                                                                                        
-                                        }                   
-                                            
-                                                                                                                     
-                                                                                                                                                                                                                                                                
+                                            }
+                                        } else {
+                                            return null
+                                        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                                     } catch (error) {
-                                        console.log(error.message);
+                                        console.log(error);
                                     }                                    
                                 }
                                 getPostData();

@@ -23,46 +23,90 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl, postIma
     useEffect(() => {
         const getPostDatas = async() => {
             try {
-                // post Data
-                const json1 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
-                );
+                    if (postImageUrl2) {
+                        // post Data
+                    const json1 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
+                    );
 
-                const json2 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl}?fields=comments_count&access_token=${token}`
-                );
+                    const json2 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl}?fields=comments_count&access_token=${token}`
+                    );
 
-                const json3 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl}?fields=like_count&access_token=${token}`
-                );
+                    const json3 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl}?fields=like_count&access_token=${token}`
+                    );
 
-                const json4 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
-                )
+                    const json4 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
+                    )
 
-                const json5 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=comments_count&access_token=${token}`
-                );
+                    const json5 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=comments_count&access_token=${token}`
+                    );
 
-                const json6 = await axios.get(
-                    `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=like_count&access_token=${token}`
-                );
-                console.log(json1.data);
-                console.log(json4.data);
-                setLoading(false);
-                setPostImage(json1.data.media_url);
-                setPostType(json1.data.media_type);                
-                setPostThumbnail(json1.data.thumbnail_url);
-                setPostLink(json1.data.permalink);
-                setPostComments(json2.data.comments_count);
-                setPostLikes(json3.data.like_count);
+                    const json6 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=like_count&access_token=${token}`
+                    );
+                    console.log(json1.data);
+                    console.log(json4.data);
+                    setLoading(false);
+                    setPostImage(json1.data.media_url);
+                    setPostType(json1.data.media_type);                
+                    setPostThumbnail(json1.data.thumbnail_url);
+                    setPostLink(json1.data.permalink);
+                    setPostComments(json2.data.comments_count);
+                    setPostLikes(json3.data.like_count);
 
-                setPostImage2(json4.data.media_url);
-                setPostType2(json4.data.media_type);
-                setPostThumbnail2(json4.data.thumbnail_url);
-                setPostLink2(json4.data.permalink);
-                setPostComments2(json5.data.comments_count);
-                setPostLikes2(json6.data.like_count);
+                    setPostImage2(json4.data.media_url);
+                    setPostType2(json4.data.media_type);
+                    setPostThumbnail2(json4.data.thumbnail_url);
+                    setPostLink2(json4.data.permalink);
+                    setPostComments2(json5.data.comments_count);
+                    setPostLikes2(json6.data.like_count);
+                } else {
+                    // post Data
+                    const json1 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
+                    );
+
+                    const json2 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl}?fields=comments_count&access_token=${token}`
+                    );
+
+                    const json3 = await axios.get(
+                        `https://graph.facebook.com/v14.0/${postImageUrl}?fields=like_count&access_token=${token}`
+                    );
+
+                    // const json4 = await axios.get(
+                    //     `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=media_type,media_url,thumbnail_url,permalink&access_token=${token}`
+                    // )
+
+                    // const json5 = await axios.get(
+                    //     `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=comments_count&access_token=${token}`
+                    // );
+
+                    // const json6 = await axios.get(
+                    //     `https://graph.facebook.com/v14.0/${postImageUrl2}?fields=like_count&access_token=${token}`
+                    // );
+                    console.log(json1.data);
+                    // console.log(json4.data);
+                    setLoading(false);
+                    setPostImage(json1.data.media_url);
+                    setPostType(json1.data.media_type);                
+                    setPostThumbnail(json1.data.thumbnail_url);
+                    setPostLink(json1.data.permalink);
+                    setPostComments(json2.data.comments_count);
+                    setPostLikes(json3.data.like_count);
+
+                    // setPostImage2(json4.data.media_url);
+                    // setPostType2(json4.data.media_type);
+                    // setPostThumbnail2(json4.data.thumbnail_url);
+                    // setPostLink2(json4.data.permalink);
+                    // setPostComments2(json5.data.comments_count);
+                    // setPostLikes2(json6.data.like_count);
+                }
+                
 
             } catch (error) {
                 console.log(error);
@@ -114,8 +158,8 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl, postIma
                             <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
                         </div>                                                                                                        
                     </div>
-
-                    <div className="campaign-complete-details2">
+                    {postImageUrl2 ? (
+                        <div className="campaign-complete-details2">
                         <div className="camapaign-complete-detail-info-wrapper">
                             {postType2 === 'VIDEO' ? (                                
                                 <a href={postLink2} target="_blank">
@@ -148,6 +192,10 @@ const CampaignCompleteDetail = ({igname, followers, token, postImageUrl, postIma
                             <span className="camapaign-complete-detail-followers">팔로워 &nbsp;{followers}</span>
                         </div>                                                                                                        
                     </div>
+                    ) : (
+                        null
+                    )}
+                    
                 </>
             )}                                                                                                      
         </CampaignCompleteDetailCSS>
